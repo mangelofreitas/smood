@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "angular": "1.6.1",
+    "angular-animate": "1.6.1",
+    "angular-cookies": "1.6.1",
+    "angular-mock": "1.0.0",
+    "angular-route": "1.6.1",
+    "gulp": "3.9.1",
+    "gulp-angular-filesort": "^1.2.1",
+    "gulp-copy": "1.0.0",
+    "gulp-cssmin": "0.1.7",
+    "gulp-debug": "3.1.0",
+    "gulp-inject": "4.2.0",
+    "gulp-sort": "2.0.0",
+    "gulp-watch": "4.3.11",
+    "rimraf": "2.2.8",
+    "systemjs": "0.20.5",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "stream-series": "^0.1.1"
+  },
+  "name": "webapp",
+  "version": "1.0.0"
+}

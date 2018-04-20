@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "wwwroot/core/content/css/site-core.css",
+    "inputFile": "wwwroot/core/content/css/site-core.scss"
+  },
+  {
+    "outputFile": "wwwroot/content/css/site.css",
+    "inputFile": "wwwroot/content/css/site.scss"
+  },
+  {
+    "outputFile": "wwwroot/core/content/css/_variables.css",
+    "inputFile": "wwwroot/core/content/css/_variables.scss"
+  },
+  {
+    "outputFile": "wwwroot/content/css/_variables.css",
+    "inputFile": "wwwroot/content/css/_variables.scss"
+  }
+]
