@@ -4,6 +4,7 @@ import threading
 import time
 import rekognition
 import pprint
+from db import db
 pp = pprint.PrettyPrinter(indent=4)
 
 def take_photo():
@@ -54,7 +55,8 @@ def threaded_loop():
         }
     }
     try:
-        pp.pprint(rekognition.detect_faces(imageS3))
+        result = rekognition.detect_faces(imageS3)
+        db.index(index='shift', doc_type='emotions', id=photo, body=result)
     except Exception as e:
         print(e)
     clean_up_photo(photo)
