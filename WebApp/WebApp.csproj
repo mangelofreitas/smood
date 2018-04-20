@@ -15,9 +15,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\content\favicons\" />
     <Folder Include="wwwroot\content\images\" />
-    <Folder Include="wwwroot\directives\" />
     <Folder Include="wwwroot\services\entity\" />
-    <Folder Include="wwwroot\views-directives\" />
-    <Folder Include="wwwroot\views\" />
   </ItemGroup>
 </Project>

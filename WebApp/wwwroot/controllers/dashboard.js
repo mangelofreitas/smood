@@ -3,6 +3,6 @@
 
     angular.module('smoodWebApp')
         .controller('DashboardController', function ($rootScope) {
-            $rootScope.hideLoadingAnimation(true);
+            //$rootScope.showLoadingAnimation();
         });
 })();

@@ -14,5 +14,9 @@
   {
     "outputFile": "wwwroot/content/css/_variables.css",
     "inputFile": "wwwroot/content/css/_variables.scss"
+  },
+  {
+    "outputFile": "wwwroot/content/css/loading.css",
+    "inputFile": "wwwroot/content/css/loading.scss"
   }
 ]
