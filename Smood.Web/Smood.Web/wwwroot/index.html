@@ -1,9 +1,73 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<!-- APP NAME MODULE HERE -->
+<html lang="en" ng-app="smoodWebApp">
+
 <head>
-    <title>index</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <!--APP DESCRIPTION HERE-->
+    <meta name="description" ng-attr-content="$root.constants.description" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta http-equiv="Content-Language" content="@SessionUserBusiness.Language" />
+    <link rel="shortcut icon" href="/content/favicons/favicon.ico">
+
+    <!--APP TITLE HERE-->
+    <title ng-bind="$root.constants.appName"></title>
+    <!-- Get fonts from google APIs -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:normal,bold,italic,bolditalic" />
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="content/css/_variables.css">
+    <link rel="stylesheet" href="content/css/_variables.min.css">
+    <link rel="stylesheet" href="content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="content/css/loading.css">
+    <link rel="stylesheet" href="content/css/loading.min.css">
+    <link rel="stylesheet" href="content/css/site.min.css">
+    <link rel="stylesheet" href="content/css/site.css">
+    <!-- endinject -->
 </head>
-<body>
-    HELLO WORLD!
+
+<body class="page">
+    <nav-bar></nav-bar>
+
+    <div class="content" ng-view></div>
+
+    <!-- inject:js -->
+
+<script src="dependencies/angularjs/angular.min.js"></script>
+
+<script src="dependencies/_jquery/jquery-3.3.1.js"></script>
+
+<script src="dependencies/bootstrap/bootstrap.js"></script>
+
+<script src="dependencies/angularjs/angular-animate.min.js"></script>
+
+<script src="dependencies/angularjs/angular-cookies.min.js"></script>
+
+<script src="dependencies/angularjs/angular-route.min.js"></script>
+
+<script src="dependencies/angularjs/i18n/angular-locale_en-gb.js"></script>
+
+<script src="dependencies/angularjs/i18n/angular-locale_pt-pt.js"></script>
+
+<script src="dependencies/angularjs/i18n/angular-locale_pt.js"></script>
+
+<script src="app-config/app.js"></script>
+
+<script src="directives/nav-bar.js"></script>
+
+<script src="directives/loading-overlay.js"></script>
+
+<script src="controllers/page-not-found.js"></script>
+
+<script src="controllers/dashboard.js"></script>
+
+<script src="app-config/run.js"></script>
+
+<script src="app-config/config.js"></script>
+
+<!-- endinject -->
 </body>
+
 </html>
