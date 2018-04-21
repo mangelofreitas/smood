@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "wwwroot/content/css/site.css",
+    "inputFile": "wwwroot/content/css/site.scss"
+  },
+  {
+    "outputFile": "wwwroot/content/css/loading.css",
+    "inputFile": "wwwroot/content/css/loading.scss"
+  },
+  {
+    "outputFile": "wwwroot/content/css/_variables.css",
+    "inputFile": "wwwroot/content/css/_variables.scss"
+  }
+]

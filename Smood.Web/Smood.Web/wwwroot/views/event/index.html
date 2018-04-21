@@ -1,0 +1,14 @@
+
+<div class="container-fluid">
+    <div class="actions-wrapper">
+        <button type="submit" class="btn btn-default btn-success">Salvar</button>
+        <button type="button" class="btn btn-default btn-secundary" ng-click="cancel();">Cancelar</button>
+    </div>                        
+    <form ng-submit="submit($event);">
+        <input-custom id="name" label="Name" model="event.Name"></input-custom>
+        <input-custom id="description" label="Description" model="event.Description"></input-custom>
+        <input-custom id="date" type="date" label="Date" model="event.Date"></input-custom>
+        <input-custom id="address" label="Address" model="event.Address"></input-custom>
+        <input-custom id="city" label="City" model="event.City"></input-custom>            
+    </form>
+</div>
