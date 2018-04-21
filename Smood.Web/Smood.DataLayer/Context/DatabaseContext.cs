@@ -9,7 +9,7 @@ namespace Smood.DataLayer.Context
         {
         }
 
-        public DbSet<Event> Events { get; set; }
+        public DbSet<SmoodEvent> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

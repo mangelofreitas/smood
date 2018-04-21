@@ -1,8 +1,18 @@
 ﻿<div class="row">
-    <div class="col-md-6">
-        <chart-dir id="first-chart" text-title="Title here"></chart-dir>
+
+    <div class="col-md-12 col-sm-12">        
+        <div class="pull-right">
+            <button ng-click="newEvent();" class="btn btn-default btn-primary">Novo evento</button>
+        </div>
     </div>
-    <div class="col-md-6">
-        <chart-dir id="second-chart" text-title="Title here"></chart-dir>
+
+    <div class="col-md-4 col-sm-6" ng-repeat="card in cards">
+        <div class="card">
+            <div class="card-header">{{card.Name}}</div>
+            <div class="card-body">
+                <div class="card-text">{{card.Count}}</div>
+            </div>
+        </div>
     </div>
 </div>
+    
