@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,19 @@ namespace Smood.Web
             {
                 c.SwaggerDoc("v1", new Info { Title = "SMOOD API", Version = "v1" });
             });
+
+            //services.AddCors();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:57623"));
+            });
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("AllowSpecificOrigin"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +66,9 @@ namespace Smood.Web
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API V1");
             });
+
+            app.UseCors("AllowSpecificOrigin");
+            //app.UseCors(builder => builder.AllowAnyOrigin() /*WithOrigins("http://localhost:57623")*/);
         }
     }
 }
