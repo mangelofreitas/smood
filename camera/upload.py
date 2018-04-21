@@ -6,6 +6,8 @@ import pprint
 from db import db
 import sys
 from datetime import datetime
+import PIL.Image
+import PIL.ExifTags
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -15,6 +17,21 @@ def upload_photos(folder, list_of_photos, event_name):
         with open("{}/{}".format(folder, photo), "r") as f:
             print(rekognition.send_photo(f, photo))
 
+        try:
+            img= PIL.Image.open("{}/{}".format(folder, photo))
+            exif = {
+                PIL.ExifTags.TAGS[k]: v
+                for k, v in img._getexif().items()
+                if k in PIL.ExifTags.TAGS
+            }
+            timestamp_str = exif['DateTimeOriginal']
+        except Exception as e:
+            print(e)
+            print("{}/{} is probably not an image".format(folder, photo))
+            continue
+
+        timestamp = datetime.strptime(timestamp_str, '%Y:%m:%d %H:%M:%S')
+
         imageS3 = {
             "S3Object": {
                 "Bucket": "shiftappens",
@@ -23,10 +40,10 @@ def upload_photos(folder, list_of_photos, event_name):
         }
         try:
             result = rekognition.index_faces(imageS3)
-            result['timestamp'] = datetime.now()
+            result['timestamp'] = timestamp
             faces = rekognition.parse_result(result)
             for face in faces:
-                face['timestamp'] = datetime.now()
+                face['timestamp'] = timestamp
                 face['eventId'] = event_name
                 db.index(index='shift-simplified', doc_type='emotions-simplified', id=photo, body=face)
             db.index(index='shift', doc_type='emotions', id=photo, body=result)
