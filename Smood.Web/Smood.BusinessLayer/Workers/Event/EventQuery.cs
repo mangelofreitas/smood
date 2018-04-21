@@ -33,5 +33,7 @@ namespace Smood.BusinessLayer.Workers.Event
                 Location = e.Location
             }).FirstOrDefault();
         }
+
+        //publi
     }
 }

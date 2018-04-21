@@ -17,6 +17,48 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\app-config\app.js" />
+    <None Include="wwwroot\app-config\config.js" />
+    <None Include="wwwroot\app-config\run.js" />
+    <None Include="wwwroot\content\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\content\css\loading.scss" />
+    <None Include="wwwroot\content\css\site.scss" />
+    <None Include="wwwroot\content\css\_variables.scss" />
+    <None Include="wwwroot\content\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\content\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\content\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\content\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\content\fonts\lineicon.svg" />
+    <None Include="wwwroot\controllers\dashboard.js" />
+    <None Include="wwwroot\controllers\error.js" />
+    <None Include="wwwroot\controllers\event.js" />
+    <None Include="wwwroot\controllers\page-not-found.js" />
+    <None Include="wwwroot\dependencies\achartjs\Chart.bundle.min.js" />
+    <None Include="wwwroot\dependencies\achartjs\Chart.min.js" />
+    <None Include="wwwroot\dependencies\angularjs\angular-animate.min.js" />
+    <None Include="wwwroot\dependencies\angularjs\angular-animate.min.js.map" />
+    <None Include="wwwroot\dependencies\angularjs\angular-cookies.min.js" />
+    <None Include="wwwroot\dependencies\angularjs\angular-cookies.min.js.map" />
+    <None Include="wwwroot\dependencies\angularjs\angular-route.min.js" />
+    <None Include="wwwroot\dependencies\angularjs\angular-route.min.js.map" />
+    <None Include="wwwroot\dependencies\angularjs\angular.min.js" />
+    <None Include="wwwroot\dependencies\angularjs\angular.min.js.map" />
+    <None Include="wwwroot\dependencies\angularjs\i18n\angular-locale_en-gb.js" />
+    <None Include="wwwroot\dependencies\angularjs\i18n\angular-locale_pt-pt.js" />
+    <None Include="wwwroot\dependencies\angularjs\i18n\angular-locale_pt.js" />
+    <None Include="wwwroot\dependencies\bootstrap\bootstrap.js" />
+    <None Include="wwwroot\dependencies\chart-angular\angular-chart.min.js" />
+    <None Include="wwwroot\dependencies\chart-angular\angular-chart.min.js.map" />
+    <None Include="wwwroot\dependencies\_jquery\jquery-3.3.1.js" />
+    <None Include="wwwroot\directives\footer-dir.js" />
+    <None Include="wwwroot\directives\input-custom.js" />
+    <None Include="wwwroot\directives\loading-overlay.js" />
+    <None Include="wwwroot\directives\nav-bar.js" />
+    <None Include="wwwroot\services\api-connector.js" />
+    <None Include="wwwroot\web.config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Smood.BusinessLayer\Smood.BusinessLayer.csproj" />
     <ProjectReference Include="..\Smood.DataLayer\Smood.DataLayer.csproj" />
   </ItemGroup>
