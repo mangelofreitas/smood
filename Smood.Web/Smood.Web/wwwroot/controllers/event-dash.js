@@ -6,8 +6,10 @@
             
             $scope.cards = [];
 
+            $rootScope.showLoadingAnimation();
             apiConnector.getAll('event')
             .then( events => {
+                $rootScope.hideLoadingAnimation(true);
                 $scope.cards = events;
                 $scope.cards.forEach( card => {
                     card.imageUrl = card.imageUrl
@@ -16,7 +18,8 @@
                 });
             })
             .catch( err => {
-                console.log(err);
+                $rootScope.hideLoadingAnimation(true);
+                $location.path("/error");
             });
 
             $scope.addEvent = () => {
