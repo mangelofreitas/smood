@@ -68,8 +68,9 @@ img.logo-img{
     width: 5em;
 }
 
-div.content{
+div.content {
     margin: 2em;
+    margin-top: 9em;
 }
 
 .footer {
@@ -106,9 +107,16 @@ div.chart-panel-wrapper{
 
 
 
-div.card-hover{
-    img.card-img {
-        max-height: 22em;
+div.card-hover {
+    margin-bottom: 1.5em;    
+    height: 13em;
+    img.card-img {                
+        height: 13em;
+    }
+    img.card-img.add {
+        width: 8em;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .card-img-overlay {
@@ -123,4 +131,11 @@ div.card-hover{
             bottom: 50%;
         }
     }
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    top: 0;
 }

@@ -4,7 +4,8 @@
     angular.module('smoodWebApp')
         .run(function ($rootScope, $http, $window, $location, $timeout, $document) {
 
-            var _apiEndpoint = 'http://localhost:8081';
+            // var _apiEndpoint = 'http://localhost:8081';
+            var _apiEndpoint = 'http://smood.azurewebsites.net'
             var _baseUrl = _apiEndpoint + '/';
 
 
@@ -39,7 +40,7 @@
                 appName: 'Smood',
                 description: '',
 
-                baseApiUrl: _baseUrl,
+                baseApiUrl: _baseUrl + 'api/',
 
                 authApiUrl: _baseUrl + 'api/',
             };

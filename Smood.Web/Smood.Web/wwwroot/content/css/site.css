@@ -1,4 +1,4 @@
-﻿login-menu .navbar-brand *:first-child {
+login-menu .navbar-brand *:first-child {
   font-family: "Segoe UI", sans-serif; }
 
 body {
@@ -52,7 +52,8 @@ img.logo-img {
   width: 5em; }
 
 div.content {
-  margin: 2em; }
+  margin: 2em;
+  margin-top: 9em; }
 
 .footer {
   position: absolute;
@@ -78,16 +79,26 @@ div.chart-panel-wrapper {
   margin-bottom: 2em;
   float: right; }
 
-div.card-hover img.card-img {
-  max-height: 22em; }
+div.card-hover {
+  margin-bottom: 1.5em;
+  height: 13em; }
+  div.card-hover img.card-img {
+    height: 13em; }
+  div.card-hover img.card-img.add {
+    width: 8em;
+    margin-left: auto;
+    margin-right: auto; }
+  div.card-hover .card-img-overlay {
+    bottom: 75%;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: bottom 0.3s linear; }
+  div.card-hover div.card:hover {
+    cursor: pointer; }
+    div.card-hover div.card:hover .card-img-overlay {
+      bottom: 50%; }
 
-div.card-hover .card-img-overlay {
-  bottom: 75%;
-  background-color: rgba(0, 0, 0, 0.4);
-  transition: bottom 0.3s linear; }
-
-div.card-hover div.card:hover {
-  cursor: pointer; }
-  div.card-hover div.card:hover .card-img-overlay {
-    bottom: 50%; }
-
+header {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  top: 0; }

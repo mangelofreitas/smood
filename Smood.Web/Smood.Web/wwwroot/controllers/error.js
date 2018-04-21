@@ -2,7 +2,6 @@
     'use strict';
 
     angular.module('smoodWebApp')
-        .controller('ErrorController', function ($rootScope) {
-            //$rootScope.showLoadingAnimation();
+        .controller('ErrorController', function ($rootScope) {        
         });
 })();
