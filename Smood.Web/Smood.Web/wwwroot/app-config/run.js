@@ -27,6 +27,12 @@
                     $rootScope.showLoading = false;
                 }
             };
+            
+            $rootScope.getClass = function (entityName) {
+                if ($location.path().indexOf(entityName) != -1) {
+                    return "active";
+                }
+            }
 
 
             $rootScope.constants = {

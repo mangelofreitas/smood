@@ -20,6 +20,7 @@
             $routeProvider
                 .when('/', { redirectTo: '/dashboard' })
                 .when('/dashboard', _getRoute('dashboard', 'DashboardController', 'index.html'))
+                .when('/error', _getRoute('error', 'ErrorController','index.html'))
                 .when('/page-not-found', _getRoute('pageNotFound', 'PageNotFoundController', 'index.html'))
                 .otherwise({ redirectTo: '/page-not-found' });
         });
