@@ -19,8 +19,12 @@
                 console.log(err);
             });
 
+            $scope.addEvent = () => {
+                $location.path('/event/create');
+            };
+
             $scope.goToEvent = card => {
-                $location.path('/event/' + card.eventId)
+                $location.path('/event/view/' + card.eventId)
             }            
         });
 })();
