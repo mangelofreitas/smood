@@ -29,7 +29,7 @@
                     $location.path("/event/create");
                 }
                 else {
-                    $location.path("/event/"+card.Id);
+                    $location.path("/event/view/"+card.Id);
                 }
 
             }

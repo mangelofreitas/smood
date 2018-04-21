@@ -1,0 +1,7 @@
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li ng-repeat="partial in path" class="breadcrumb-item" ng-class="{'active': partial.Active}"><a ng-if="!partial.Active" ng-attr-href="{{partial.Path}}">{{partial.Text}}</a>{{partial.Active ? partial.Text : ''}}</li>
+        <!--<li class="breadcrumb-item"><a href="#">Library</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Data</li>-->
+    </ol>
+</nav>
