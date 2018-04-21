@@ -43,7 +43,7 @@ namespace Smood.BusinessLayer.Workers.Event
                             ? DatabaseContext.Events.Add(new SmoodEvent()).Entity
                             : DatabaseContext.Events.FirstOrDefault(e => e.EventId == eventId && e.DeleteDate == null);
 
-            dto.ApplyChanges(@event);
+            dto.ApplyChanges(@event, eventId == null);
             @event.ImagePath = ImagePath;
 
             DatabaseContext.SaveChanges();

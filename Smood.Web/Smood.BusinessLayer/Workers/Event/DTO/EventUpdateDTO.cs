@@ -1,4 +1,5 @@
 ﻿using Smood.DataLayer.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Smood.BusinessLayer.Workers.Event.DTO
@@ -11,13 +12,24 @@ namespace Smood.BusinessLayer.Workers.Event.DTO
 
         public IEnumerable<string> PhotoUrls { get; set; }
 
+        public string Code { get; set; }
+
         #region Apply Changes
 
-        public void ApplyChanges(SmoodEvent entity)
+        public void ApplyChanges(SmoodEvent entity, bool isNew)
         {
             entity.Name = Name;
             entity.Description = Description;
             entity.Location = Location;
+
+            entity.StartDate = StartDate;
+            entity.EndDate = EndDate;
+
+            if (isNew)
+            {
+                entity.Code = Code;
+                entity.CreateDate = DateTime.Now;
+            }
         }
 
         #endregion
