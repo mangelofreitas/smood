@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('smoodWebApp')
-        .controller('EventController', function ($scope, $rootScope, $location, apiConnector, Upload) {
+        .controller('EventController', function ($scope, $rootScope, $location, apiConnector, Upload, $routeParams) {
 
             $scope.event = {};
 
@@ -11,6 +11,16 @@
             $rootScope.cancelFunction = () => {
                 $location.path('/event');
             };
+
+            $rootScope.showLoadingAnimation();
+            apiConnector.get($routeParams.id, "event").then(result => {
+                $scope.cards = result;
+                $rootScope.hideLoadingAnimation(true);
+            }, err => {
+                $location.path("/error");
+                $rootScope.hideLoadingAnimation(true);
+            });
+
 
             var _submit = submitEvent => {
 
