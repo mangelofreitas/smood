@@ -21,12 +21,15 @@ def upload_photos(folder, list_of_photos, event_name):
             }
         }
         try:
-            result = rekognition.detect_faces(imageS3)
-            print("Uploaded photo")
-            db.index(index='shift-{}'.format(event), doc_type='emotions', id=photo, body=result)
-            print("Saved information on elasticsearch")
+            result = rekognition.index_faces(imageS3)
+            result['timestamp'] = datetime.now()
+            faces = rekognition.parse_result(result)
+            for face in faces:
+                face['timestamp'] = datetime.now()
+                db.index(index='shift-simplified', doc_type='emotions-simplified', id=photo, body=face)
+            db.index(index='shift', doc_type='emotions', id=photo, body=result)
         except Exception as e:
-            print(e)
+        print(e)
 
 if __name__ == "__main__" :
     if len(sys.argv) < 3:

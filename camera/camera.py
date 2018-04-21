@@ -2,6 +2,7 @@ import os
 from subprocess import call, check_output
 import threading
 import time
+from datetime import datetime
 import rekognition
 import pprint
 from db import db
@@ -55,13 +56,18 @@ def threaded_loop():
         }
     }
     try:
-        result = rekognition.detect_faces(imageS3)
+        result = rekognition.index_faces(imageS3)
+        result['timestamp'] = datetime.now()
+        faces = rekognition.parse_result(result)
+        for face in faces:
+            face['timestamp'] = datetime.now()
+            db.index(index='shift-simplified', doc_type='emotions-simplified', id=photo, body=face)
         db.index(index='shift', doc_type='emotions', id=photo, body=result)
     except Exception as e:
         print(e)
     clean_up_photo(photo)
 
-    #threading.Timer(10, threaded_loop).start()
+    threading.Timer(10, threaded_loop).start()
 try:
     rekognition.create_collection(rekognition.collection_id)
 except Exception as e:

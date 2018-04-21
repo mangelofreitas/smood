@@ -1,5 +1,8 @@
 import boto3
 import botocore
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
 global rekognition
 rekognition = boto3.client('rekognition')
 
@@ -38,7 +41,8 @@ def index_faces(imageS3):
     """
     response = rekognition.index_faces(
         CollectionId = collection_id,
-        Image = imageS3
+        Image = imageS3,
+        DetectionAttributes=['ALL']
     )
     return response
 
@@ -48,6 +52,45 @@ def detect_faces(imageS3):
         Image = imageS3
     )
     return response
+
+def emotions_parse(face):
+    EMOTIONS = ['HAPPY', 'SAD', 'ANGRY', 'CONFUSED', 'DISGUSTED', 'SURPRISED', 'CALM', 'UNKNOWN']
+    facial_emotion = {
+        'HAPPY':0.0,
+        'SAD':0.0,
+        'ANGRY':0.0,
+        'CONFUSED':0.0,
+        'DISGUSTED':0.0,
+        'SURPRISED':0.0,
+        'CALM':0.0,
+        'UNKNOWN':0.0
+    }
+    pp.pprint(face['Emotions'])
+    for emotion in face['Emotions']:
+        facial_emotion[emotion['Type']] = emotion['Confidence']
+    return facial_emotion
+
+def parse_result(result):
+    faces = []
+    for face_record in result['FaceRecords']:
+        face = face_record['FaceDetail']
+        facial_id = {
+            'faceId': face_record['Face']['FaceId'],
+            'gender': face['Gender']['Value'],
+            'sunglasses': face['Sunglasses']['Value'],
+            'eyeglasses': face['Eyeglasses']['Value'],
+            'emotions': emotions_parse(face),
+            'ageMax': face['AgeRange']['High'],
+            'ageMin': face['AgeRange']['Low'],
+            'eyesOpen': face['EyesOpen']['Value'],
+            'mouthOpen': face['MouthOpen']['Value'],
+            'mustache': face['Mustache']['Value'],
+            'beard': face['Beard']['Value'],
+            'smile': face['Smile']['Value'],
+            'imageId': face_record['Face']['ImageId']
+        }
+        faces.append(facial_id)
+    return faces
 
 def delete_photo(filename):
     s3.Object(TEMP_BUCKET, filename).delete()
