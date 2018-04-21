@@ -23,7 +23,7 @@ def create_collection(collection_id):
     return response
 
 def search_faces(imageS3):
-    search_faces_by_image(
+    response = rekognition.search_faces_by_image(
         CollectionId = collection_id,
         Image = imageS3,
         MaxFaces = 100,

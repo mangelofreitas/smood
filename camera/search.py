@@ -1,16 +1,18 @@
-import os
+import sys, os
 from db import db
 import rekognition
 from time import time
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 def get_data_by_face_id(face_ids):
     '''
     Searches elastic and returns all references of this face id.
     '''
     data = {}
-    for face_id in face_ids
+    for face_id in face_ids:
         try:
-            response = db.search(index="shift-simplified", body=body={
+            response = db.search(index="shift-simplified", body={
               'query': {
                 'term': {
                     'faceId': face_id
@@ -33,9 +35,10 @@ def get_face_ids(imageS3):
     face_matches = rekognition.search_faces(imageS3)
     if face_matches:
         for face_match in face_matches:
-            face_ids.append(face['Face']['FaceId'])
-    #Lets keep it simple for now and return only the first found match to avoid massive calls for now
-    return [face_ids[0]]
+            face_ids.append(face_match['Face']['FaceId'])
+            pp.pprint(face_match)
+    #Lets keep it simple for now and return only the first found match to avoid massive calls data
+    return face_ids
 
 def upload_photo(image_path):
     '''
@@ -45,7 +48,9 @@ def upload_photo(image_path):
     image_name = image_path.replace('/', 'TAGGED_TO_REMOVE')
     image_name = image_name.replace('\\', 'TAGGED_TO_REMOVE')
     image_name = image_name.split('TAGGED_TO_REMOVE')[-1]
-    image_name = image_name + "_{}".format(str(time()))
+    image_name = image_name + "_{}".format(str(int(time())))
+    print image_name, image_path
+    # raise Exception("Something")
     with open(image_path, 'r') as f:
         rekognition.send_photo(f, image_name)
 
@@ -59,13 +64,13 @@ def upload_photo(image_path):
 
 def main():
     if len(sys.argv) < 2:
-    print("Error: Please use the following format: python search.py FULL_PATH_TO_IMAGE")
-    exit(1)
+        print("Error: Please use the following format: python search.py FULL_PATH_TO_IMAGE")
+        exit(1)
     image_path = sys.argv[1]
     imageS3 = upload_photo(image_path)
     face_ids = get_face_ids(imageS3)
-    rekognition.delete_photo(imageS3['S3Object']['Name'])
-    return get_data_by_face_id(face_ids)
+    # rekognition.delete_photo(imageS3['S3Object']['Name'])
+    pp.pprint(get_data_by_face_id(face_ids))
 
 if __name__ == "__main__" :
     main()
