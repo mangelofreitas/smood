@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Smood.DataLayer.Context;
+using Smood.Web.Base.Settings;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Smood.Web
 {
@@ -29,6 +25,13 @@ namespace Smood.Web
                 options.UseSqlServer(Configuration.GetConnectionString("SmoodDatabaseConnection")));
 
             services.AddMvc();
+
+            services.Configure<SmoodSettings>(Configuration.GetSection("SmoodSettings"));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "SMOOD API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +45,12 @@ namespace Smood.Web
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API V1");
+            });
         }
     }
 }
