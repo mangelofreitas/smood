@@ -30,8 +30,6 @@
                 return response;
             });
             return promise;
-        };
-
-        
+        };        
     })
 })();
