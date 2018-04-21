@@ -4,7 +4,6 @@
     angular.module('smoodWebApp')
         .config(function ($routeProvider, $locationProvider) {
 
-
             var _getRoute = function (entityName, controller, fileName) {
                 return {
                     templateUrl: 'views/' + entityName + '/' + fileName,
