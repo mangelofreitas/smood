@@ -6,8 +6,16 @@
             return {
                 restrict: 'E',
                 scope: {
+                    showSubmitButtons: '=?'
                 },
                 controller: function ($scope, $timeout, $location) {
+                    if ($location.path().indexOf("create") != -1) {
+                        $scope.showSubmitButtons = true;
+                    }
+                    else if (!$scope.showSubmitButtons) {
+                        $scope.showSubmitButtons = false;
+                    }
+
                     var _capitalizeFirstLetter = function (string) {
                         return string.charAt(0).toUpperCase() + string.slice(1);
                     }
