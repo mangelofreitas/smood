@@ -103,3 +103,24 @@ div.chart-panel-wrapper{
     margin-bottom: 2em; 
     float: right;
 }
+
+
+
+div.card-hover{
+    img.card-img {
+        max-height: 22em;
+    }
+
+    .card-img-overlay {
+        bottom: 75%;
+        background-color: rgba(0,0,0,0.4);
+        transition: bottom 0.3s linear;
+    }
+
+    div.card:hover{
+        cursor: pointer;
+        .card-img-overlay{
+            bottom: 50%;
+        }
+    }
+}
