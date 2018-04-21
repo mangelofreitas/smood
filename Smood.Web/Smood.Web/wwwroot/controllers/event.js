@@ -6,18 +6,13 @@
 
             $scope.event = {};
 
-            $scope.cancel = () => {
-                $location.path('/events');
+            $scope.tabIndex = 1;
+
+            $rootScope.cancelFunction = () => {
+                $location.path('/event');
             };
 
-            $scope.uploadFiles = files => {
-                files.forEach(file => {
-                    console.log(file);
-                });
-                $scope.files = files;
-            };
-
-            $scope.submit = submitEvent => {
+            var _submit = submitEvent => {
 
                 if (!$scope.event.file) {
                     alert("Please select an image!");
@@ -40,5 +35,19 @@
                             })
                     });
             };
+
+            $scope.submit = _submit;
+
+            $rootScope.submitFunction = ($event) => {
+                _submit($event);
+            };
+
+            //$scope.uploadFiles = files => {
+            //    files.forEach(file => {
+            //        console.log(file);
+            //    });
+            //    $scope.files = files;
+            //};
+
         });
 })();
