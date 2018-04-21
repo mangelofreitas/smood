@@ -52,12 +52,5 @@
                 _submit($event);
             };
 
-            //$scope.uploadFiles = files => {
-            //    files.forEach(file => {
-            //        console.log(file);
-            //    });
-            //    $scope.files = files;
-            //};
-
         });
 })();

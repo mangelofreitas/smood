@@ -11,8 +11,11 @@
             return promise;
         };
 
-        this.postImage = () => {
-            
+        this.postImage = (entityName, eventId, data) => {
+            var promise = $http.post(url.concat(entityName, "/", id, "/photo"), data).then(response => {
+                return response.data;
+            });
+            return promise;            
         };
 
         this.put = (entityName, id, data) => {

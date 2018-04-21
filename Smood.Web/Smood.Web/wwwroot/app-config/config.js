@@ -20,7 +20,6 @@
                 .when('/', { redirectTo: '/dashboard' })
                 .when('/dashboard', _getRoute('dashboard', 'DashboardController', 'index.html'))
                 .when('/error', _getRoute('error', 'ErrorController','index.html'))
-                .when('/event/create', _getRoute('event', 'EventController', 'create-update.html'))
                 .when('/event/view/:id', _getRoute('event', 'EventController', 'view.html'))
                 .when('/event', _getRoute('event', 'EventDashController', 'index.html'))
                 .when('/page-not-found', _getRoute('pageNotFound', 'PageNotFoundController', 'index.html'))
