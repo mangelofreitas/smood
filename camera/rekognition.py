@@ -22,6 +22,19 @@ def create_collection(collection_id):
     )
     return response
 
+def search_faces(imageS3):
+    search_faces_by_image(
+        CollectionId = collection_id,
+        Image = imageS3,
+        MaxFaces = 100,
+        FaceMatchThreshold = 70.0
+    )
+    if len(response['FaceMatches']) == 0:
+        print("Lenght = 0")
+        return None
+    # print(response['FaceMatches'][0]['Face']['FaceId'])
+    return response['FaceMatches']
+
 
 def send_photo(file, filename):
     # Upload a new file
