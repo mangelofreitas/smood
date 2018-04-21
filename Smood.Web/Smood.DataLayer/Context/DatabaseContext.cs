@@ -10,6 +10,7 @@ namespace Smood.DataLayer.Context
         }
 
         public DbSet<SmoodEvent> Events { get; set; }
+        public DbSet<EventPhoto> EventPhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

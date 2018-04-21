@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,10 +21,12 @@ namespace Smood.DataLayer.Models
 
         public DateTime EndDate { get; set; }
 
-        public string ImagePath { get; set; }
-
         public DateTime? CreateDate { get; set; }
 
         public DateTime? DeleteDate { get; set; }
+
+        public string ImagePath { get; set; }
+
+        public ICollection<EventPhoto> EventPhotos { get; set; }
     }
 }

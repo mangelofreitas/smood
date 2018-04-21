@@ -64,7 +64,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\content\image-uploads\" />
+    <Folder Include="wwwroot\content\photo-uploads\" />
   </ItemGroup>
 
 </Project>

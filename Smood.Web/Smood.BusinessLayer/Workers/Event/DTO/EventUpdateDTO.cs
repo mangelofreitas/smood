@@ -1,18 +1,15 @@
 ﻿using Smood.DataLayer.Models;
+using System.Collections.Generic;
 
 namespace Smood.BusinessLayer.Workers.Event.DTO
 {
-    public class EventUpdateDTO
+    public class EventUpdateDTO : EventListDTO
     {
-        public int EventId { get; set; }
-
-        public string Name { get; set; }
-
         public string Description { get; set; }
 
-        public string ImageUrl { get; set; }
-
         public string Location { get; set; }
+
+        public IEnumerable<string> PhotoUrls { get; set; }
 
         #region Apply Changes
 

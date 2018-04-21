@@ -10,27 +10,28 @@ namespace Smood.BusinessLayer.Workers.Event
     {
         public EventQuery(DatabaseContext context) : base(context) {}
 
-        public IQueryable<EventListDTO> GetAll(/*string imagesPath*/)
+        public IQueryable<EventListDTO> GetAll(string basePath)
         {
             //var basePath = Directory.GetCurrentDirectory();
             return DatabaseContext.Events.Where(e => e.DeleteDate == null).Select(e => new EventListDTO
             {
                 EventId = e.EventId,
-                ImageUrl = e.ImagePath,
-                Name = e.Name
+                Name = e.Name,
+                ImageUrl = e.ImagePath.Replace(basePath, "").Replace("\\", "/")
             });
         }
 
-        public EventUpdateDTO GetById(int eventId)
+        public EventUpdateDTO GetById(int eventId, string basePath)
         {
             //var basePath = Directory.GetCurrentDirectory();
             return DatabaseContext.Events.Where(e => e.DeleteDate == null).Select(e => new EventUpdateDTO
             {
                 EventId = e.EventId,
-                ImageUrl = e.ImagePath,
                 Name = e.Name,
                 Description = e.Description,
-                Location = e.Location
+                Location = e.Location,
+                ImageUrl = e.ImagePath.Replace(basePath, "").Replace("\\", "/"),
+                PhotoUrls = e.EventPhotos.Select(p => p.FilePath.Replace(basePath, "").Replace("\\", "/"))
             }).FirstOrDefault();
         }
 
