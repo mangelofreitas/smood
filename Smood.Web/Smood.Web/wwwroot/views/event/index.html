@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="col-md-4 col-sm-6 card-hover card-dash">
-        <div ng-click="addEvent();" class="card bg-dark text-white">
+        <div data-toggle="modal" data-target="#create-event" class="card bg-dark text-white">
             <img class="card-img add" 
                 src="content/images/plus.svg"
                 alt="Card image">
@@ -18,6 +18,42 @@
                 <h5 class="card-title">Add Event</h5>
             </div>
         </div>
-    </div>    
+    </div>        
 </div>
+
+
+<!-- Create modal -->
+<div id="create-event" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">    
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Create Event</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>            
+                <div class="modal-body">                
+                    <input-custom id="name" label="Name" model="event.name" required="true"></input-custom>
+                    <input-custom id="code" label="Code" model="event.code" required="true"></input-custom>
+                    <input-custom id="description" label="Description" model="event.description" required="true"></input-custom>
+                    <input-custom id="start-date" type="date" label="Start Date" model="event.startDate" required="true"></input-custom>
+                    <input-custom id="end-date" type="date" label="End Date" model="event.endDate" required="true"></input-custom>
+                    <input-custom id="location" label="Location" model="event.location" required="true"></input-custom>
+                    <input-file id="file" label="Main image" model="event.file" multiple="false"></input-file>             
+                    <img ngf-thumbnail="event.file">
+                </div>                
+                <div class="modal-footer">
+                    <form ng-submit="submit()">                    
+                    <div class="actions-wrapper">
+                        <button class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                    </div>                              
+                    </form>
+                </div>    
+            </div>
+        </div>   
+  </div>
+</div>
+<!-- ./ Create modal -->
+
     
