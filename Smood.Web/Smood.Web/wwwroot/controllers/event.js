@@ -6,8 +6,21 @@
 
             $scope.event = {};
 
-            $scope.cancel = () => {
-                $location.path('/events');
+            $scope.tabIndex = 1;
+
+            $rootScope.cancelFunction = () => {
+                $location.path('/event');
             };
+
+            var _submit = function ($event) {
+                var entity = $scope.event;
+            };
+
+            $scope.submit = _submit;
+
+            $rootScope.submitFunction = ($event) => {
+                _submit($event);
+            };
+
         });
 })();

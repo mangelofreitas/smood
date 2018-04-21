@@ -6,16 +6,10 @@
             return {
                 restrict: 'E',
                 scope: {
-                    showSubmitButtons: '=?'
+                    submitFunction: '=?',
+                    cancelFunction: '=?'
                 },
                 controller: function ($scope, $timeout, $location) {
-                    if ($location.path().indexOf("create") != -1) {
-                        $scope.showSubmitButtons = true;
-                    }
-                    else if (!$scope.showSubmitButtons) {
-                        $scope.showSubmitButtons = false;
-                    }
-
                     var _capitalizeFirstLetter = function (string) {
                         return string.charAt(0).toUpperCase() + string.slice(1);
                     }
@@ -48,6 +42,16 @@
                             }
                         }
                         $scope.path[$scope.path.length - 1].Active = true;
+
+                        if ($location.path().indexOf("create") != -1 || $location.path().indexOf("edit") != -1) {
+                            $scope.showSubmitButtons = true;
+                        }
+                        else if (!$scope.showSubmitButtons) {
+                            $scope.showSubmitButtons = false;
+                        }
+                        else {
+                            $scope.showSubmitButtons = false;
+                        }
                     };
 
 
@@ -57,6 +61,13 @@
                         _recalculateBreadCam();
                     });
 
+                    $scope.doCancel = function () {
+                        $scope.cancelFunction();
+                    };
+
+                    $scope.doSubmit = function () {
+                        $scope.submitFunction();
+                    };
 
                 },
                 templateUrl: 'views-directives/breadcrum.html'
