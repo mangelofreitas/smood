@@ -68,8 +68,9 @@ img.logo-img{
     width: 5em;
 }
 
-div.content{
+div.content {
     margin: 2em;
+    margin-top: 9em;
 }
 
 .footer {
@@ -123,4 +124,11 @@ div.card-hover{
             bottom: 50%;
         }
     }
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    top: 0;
 }

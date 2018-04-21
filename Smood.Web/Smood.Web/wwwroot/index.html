@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- APP NAME MODULE HERE -->
 <html lang="en" ng-app="smoodWebApp">
 
@@ -30,19 +30,15 @@
 
 <body class="page">
     <nav-bar></nav-bar>
-
+    <!--<breadcrum></breadcrum>-->
     <div class="content" ng-view></div>
 
-    <footer-dir></footer-dir>
+    <!--<footer-dir></footer-dir>-->
     <!-- inject:js -->
 
 <script src="dependencies/angularjs/angular.min.js"></script>
 
 <script src="dependencies/_jquery/jquery-3.3.1.js"></script>
-
-<script src="dependencies/achartjs/Chart.bundle.min.js"></script>
-
-<script src="dependencies/achartjs/Chart.min.js"></script>
 
 <script src="dependencies/angularjs/angular-animate.min.js"></script>
 
@@ -50,9 +46,13 @@
 
 <script src="dependencies/angularjs/angular-route.min.js"></script>
 
-<script src="dependencies/chart-angular/angular-chart.min.js"></script>
+<script src="dependencies/achartjs/Chart.bundle.min.js"></script>
+
+<script src="dependencies/achartjs/Chart.min.js"></script>
 
 <script src="dependencies/bootstrap/bootstrap.js"></script>
+
+<script src="dependencies/chart-angular/angular-chart.min.js"></script>
 
 <script src="dependencies/angularjs/i18n/angular-locale_en-gb.js"></script>
 
@@ -61,6 +61,8 @@
 <script src="dependencies/angularjs/i18n/angular-locale_pt.js"></script>
 
 <script src="app-config/app.js"></script>
+
+<script src="services/elastic-search-connector.js"></script>
 
 <script src="services/api-connector.js"></script>
 
@@ -73,6 +75,8 @@
 <script src="directives/footer-dir.js"></script>
 
 <script src="directives/chart-dir.js"></script>
+
+<script src="directives/breadcrum.js"></script>
 
 <script src="controllers/page-not-found.js"></script>
 

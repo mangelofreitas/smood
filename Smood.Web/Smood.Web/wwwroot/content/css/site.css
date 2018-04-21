@@ -52,7 +52,8 @@ img.logo-img {
   width: 5em; }
 
 div.content {
-  margin: 2em; }
+  margin: 2em;
+  margin-top: 9em; }
 
 .footer {
   position: absolute;
@@ -90,4 +91,10 @@ div.card-hover div.card:hover {
   cursor: pointer; }
   div.card-hover div.card:hover .card-img-overlay {
     bottom: 50%; }
+
+header {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  top: 0; }
 
