@@ -16,14 +16,19 @@ namespace Smood.BusinessLayer.Workers.Event
 
         public EventUpdateDTO Save(EventCreateDTO dto, string basePath)
         {
-            var uploads = Path.Combine(basePath, "content/photo-uploads");
-            var finalPath = Path.Combine(uploads, "main-" + Guid.NewGuid());
+            string finalPath = null;
 
-            using (var fileStream = new FileStream(finalPath, FileMode.Create))
+            if (dto.ImageData != null)
             {
-                using (var memoryStream = new MemoryStream(dto.ImageData))
+                var uploads = Path.Combine(basePath, "content/photo-uploads");
+                finalPath = Path.Combine(uploads, "main-" + Guid.NewGuid());
+
+                using (var fileStream = new FileStream(finalPath, FileMode.Create))
                 {
-                    memoryStream.CopyTo(fileStream);
+                    using (var memoryStream = new MemoryStream(dto.ImageData))
+                    {
+                        memoryStream.CopyTo(fileStream);
+                    }
                 }
             }
 
