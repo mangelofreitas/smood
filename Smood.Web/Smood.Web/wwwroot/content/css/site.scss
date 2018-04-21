@@ -107,9 +107,16 @@ div.chart-panel-wrapper{
 
 
 
-div.card-hover{
-    img.card-img {
-        max-height: 22em;
+div.card-hover {
+    margin-bottom: 1.5em;    
+    height: 13em;
+    img.card-img {                
+        height: 13em;
+    }
+    img.card-img.add {
+        width: 8em;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .card-img-overlay {

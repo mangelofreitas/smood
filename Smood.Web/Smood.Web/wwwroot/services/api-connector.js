@@ -11,6 +11,10 @@
             return promise;
         };
 
+        this.postImage = () => {
+            
+        };
+
         this.put = (entityName, id, data) => {
             var promise = $http.put(url.concat(entityName, "/", id), data).then(response => {
                 return response;
@@ -27,7 +31,7 @@
 
         this.getAll = (entityName) => {
             var promise = $http.get(url.concat(entityName)).then(response => {
-                return response;
+                return response.data;
             });
             return promise;
         };        

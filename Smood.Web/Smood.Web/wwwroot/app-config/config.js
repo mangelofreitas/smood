@@ -22,6 +22,7 @@
                 .when('/error', _getRoute('error', 'ErrorController','index.html'))
                 .when('/event/create', _getRoute('event', 'EventController', 'index.html'))
                 .when('/event/view/:id', _getRoute('event', 'EventController', 'view.html'))
+                .when('/events', _getRoute('event', 'EventDashController', 'index.html'))
                 .when('/page-not-found', _getRoute('pageNotFound', 'PageNotFoundController', 'index.html'))
                 .otherwise({ redirectTo: '/page-not-found' });
         });

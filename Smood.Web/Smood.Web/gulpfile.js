@@ -8,8 +8,8 @@ var gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     series = require('stream-series'),
     angularFilesort = require('gulp-angular-filesort'),
-    inject = require('gulp-inject');
-    //sass = require('gulp-sass');
+    inject = require('gulp-inject'),
+    sass = require('gulp-sass');
 
 var paths = {
     webroot: "./wwwroot/"
@@ -56,18 +56,18 @@ gulp.task('index', function () {
         .pipe(gulp.dest('./wwwroot/'));
 });
 
-//gulp.task('sass', function () {
-//    return gulp.src([
-//            'wwwroot/content/css/*.scss'
-//            ])
-//            .pipe(sass().on('error', sass.logError))
-//            .pipe(gulp.dest(function(file){
-//                var split = file.path.split("/");
-//                var fileFolder = split.slice(0, split.length - 1).join("/");
-//                return fileFolder;
-//            }));
-//});
+gulp.task('sass', function () {
+   return gulp.src([
+           'wwwroot/content/css/*.scss'
+           ])
+           .pipe(sass().on('error', sass.logError))
+           .pipe(gulp.dest(function(file){
+               var split = file.path.split("/");
+               var fileFolder = split.slice(0, split.length - 1).join("/");
+               return fileFolder;
+           }));
+});
 
-//gulp.task('sass:watch', function () { 
-//    gulp.watch(['wwwroot/content/css/*.scss'], ['sass']);
-//});
+gulp.task('sass:watch', function () { 
+   gulp.watch(['wwwroot/content/css/*.scss'], ['sass']);
+});

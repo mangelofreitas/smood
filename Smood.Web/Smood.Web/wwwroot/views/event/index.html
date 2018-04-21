@@ -1,13 +1,23 @@
 
-<div class="container-fluid">
-    <div class="actions-wrapper">
-        <button type="submit" class="btn btn-default btn-success">Salvar</button>
-        <button type="button" class="btn btn-default btn-secundary" ng-click="cancel();">Cancelar</button>
-    </div>                        
-    <form ng-submit="submit($event);">
-        <input-custom id="name" label="Name" model="event.Name"></input-custom>
-        <input-custom id="description" label="Description" model="event.Description"></input-custom>
-        <input-custom id="date" type="date" label="Date" model="event.Date"></input-custom>
-        <input-custom id="location" label="Location" model="event.Location"></input-custom>
-    </form>
+<div class="row">
+    <div class="col-md-4 col-sm-6 card-hover card-dash" ng-repeat="card in cards">
+        <div ng-click="goToEvent(card)" class="card bg-dark text-white">
+            <img class="card-img" src="{{card.imageUrl}}" alt="Card image">
+            <div class="card-img-overlay">
+                <h5 class="card-title">{{card.name}}</h5>
+                <p class="card-text">{{card.description}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-hover card-dash">
+        <div ng-click="goToLocation(card)" class="card bg-dark text-white">
+            <img class="card-img add" 
+                src="content/images/plus.svg"
+                alt="Card image">
+            <div class="card-img-overlay">
+                <h5 class="card-title">Add Event</h5>
+            </div>
+        </div>
+    </div>    
 </div>
+    
