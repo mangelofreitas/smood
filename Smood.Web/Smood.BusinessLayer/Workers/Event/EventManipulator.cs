@@ -21,7 +21,7 @@ namespace Smood.BusinessLayer.Workers.Event
                         
             DatabaseContext.SaveChanges();
 
-            @event.EventId = @event.EventId;
+            dto.EventId = @event.EventId;
 
             return dto;
         }
