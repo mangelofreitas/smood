@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="BuildWebCompiler" Version="1.11.375" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< Updated upstream
     <Folder Include="wwwroot\content\images\" />
   </ItemGroup>
 
+=======
+    <Content Remove="wwwroot\content\css\site.scss" />
+  </ItemGroup>
+>>>>>>> Stashed changes
 </Project>

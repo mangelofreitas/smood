@@ -1,4 +1,4 @@
-﻿login-menu .navbar-brand *:first-child {
+login-menu .navbar-brand *:first-child {
   font-family: "Segoe UI", sans-serif; }
 
 body {
@@ -44,6 +44,10 @@ label {
 nav.bg-dark {
   background-color: #333; }
 
+.content {
+  padding-right: 2.5em;
+  padding-left: 2.5em; }
+
 img.logo-img {
   width: 5em; }
 
@@ -65,3 +69,7 @@ div.content {
   .container span.text-muted {
     font-size: 0.8em; }
 
+.actions-wrapper {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  float: right; }

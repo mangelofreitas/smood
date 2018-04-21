@@ -57,6 +57,11 @@ label {
 
 nav.bg-dark {
     background-color: #333;
+} 
+
+.content {
+    padding-right: $side-space; 
+    padding-left: $side-space;
 }
 
 img.logo-img{
@@ -85,4 +90,11 @@ div.content{
     span.text-muted {
         font-size: 0.8em;
     }
+}
+
+
+.actions-wrapper { 
+    margin-top: 1em;
+    margin-bottom: 2em; 
+    float: right;
 }
