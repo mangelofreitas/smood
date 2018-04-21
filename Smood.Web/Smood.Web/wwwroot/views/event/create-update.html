@@ -5,9 +5,17 @@
         <button type="button" class="btn btn-default btn-secundary" ng-click="cancel();">Cancelar</button>
     </div>                        
     <form ng-submit="submit($event);">
-        <input-custom id="name" label="Name" model="event.Name"></input-custom>
-        <input-custom id="description" label="Description" model="event.Description"></input-custom>
-        <input-custom id="date" type="date" label="Date" model="event.Date"></input-custom>
-        <input-custom id="location" label="Location" model="event.Location"></input-custom>
+        <input-custom id="name" label="Name" model="event.Name" required="true"></input-custom>
+        <input-custom id="description" label="Description" model="event.Description" required="true"></input-custom>
+        <input-custom id="date" type="date" label="Date" model="event.Date" required="true"></input-custom>
+        <input-custom id="location" label="Location" model="event.Location" required="true"></input-custom>
+        <!-- <input type="file" multiple="true" ng-model="files" ng-f> -->
+        <div ngf-drop="uploadFiles($files)" class="drop-box"
+            ngf-drag-over-class="'dragover'" ngf-multiple="true">
+            Drop Images or PDFs files here
+        </div>        
+        <div class="img-preview" ng-repeat="file in files">
+            <img ngf-thumbnail="file">
+        </div>        
     </form>
 </div>
