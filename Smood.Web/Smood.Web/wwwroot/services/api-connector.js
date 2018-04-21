@@ -4,9 +4,9 @@
     angular.module('smoodWebApp').service('apiConnector', function ($http, $window, $rootScope) {
         const url = $rootScope.constants.baseApiUrl;
 
-        this.post = (data, entityName) => {            
+        this.post = (entityName, data) => {            
             var promise = $http.post(url.concat(entityName), data).then(response => {
-                return response;
+                return response.data;
             });
             return promise;
         };
