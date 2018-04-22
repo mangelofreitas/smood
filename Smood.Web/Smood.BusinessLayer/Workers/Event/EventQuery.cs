@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Smood.BusinessLayer.Base.Workers;
 using Smood.BusinessLayer.Workers.Event.DTO;
+using Smood.BusinessLayer.Workers.Event.DTO.DataViz;
 using Smood.BusinessLayer.Workers.Event.DTO.ElasticSearch;
 using Smood.DataLayer.Context;
 using System;
@@ -24,14 +25,24 @@ namespace Smood.BusinessLayer.Workers.Event
 
         #region Private Methods
 
-        private StringResponse DoElasticSearch(string _elasticUrl, object postData)
+        private ElasticLowLevelClient ElasticGetClient(string _elasticUrl)
         {
             var settings = new ConnectionConfiguration(new Uri(_elasticUrl))
                                 .RequestTimeout(TimeSpan.FromMinutes(2));
 
-            var lowlevelClient = new ElasticLowLevelClient(settings);
+            return new ElasticLowLevelClient(settings);
+        }
 
-            return lowlevelClient.Search<StringResponse>("shift-simplified", PostData.Serializable(postData));
+        private StringResponse ElasticDoSearch(string _elasticUrl, object postData)
+        {
+
+            return ElasticGetClient(_elasticUrl).Search<StringResponse>("shift-simplified", PostData.Serializable(postData));
+        }
+
+        private StringResponse ElasticDoCount(string _elasticUrl, object postData)
+        {
+
+            return ElasticGetClient(_elasticUrl).Count<StringResponse>("shift-simplified", PostData.Serializable(postData));
         }
 
         #endregion
@@ -68,6 +79,7 @@ namespace Smood.BusinessLayer.Workers.Event
             }).FirstOrDefault();
 
             dto.AvgAge = GetAverageAge(eventId, _elasticUrl);
+            dto.GenderCount = GetFemaleMaleCount(eventId, _elasticUrl);
 
             return dto;
         }
@@ -86,7 +98,7 @@ namespace Smood.BusinessLayer.Workers.Event
 
             var lowlevelClient = new ElasticLowLevelClient(settings);
 
-            var searchResult = DoElasticSearch(_elasticUrl, new
+            var searchResult = ElasticDoSearch(_elasticUrl, new
             {
                 size = 0,
                 query = new
@@ -189,7 +201,7 @@ namespace Smood.BusinessLayer.Workers.Event
                 Labels = new List<string>(),
                 Series = new List<ChartSeriesDTO>()
             };
-                                  
+
 
             var happyList = new List<decimal?>();
             var angryList = new List<decimal?>();
@@ -215,14 +227,14 @@ namespace Smood.BusinessLayer.Workers.Event
                 var confusedValue = bucket["avgConfused"]["value"].ToString();
 
 
-                happyList.Add(happyValue == "" ?    (decimal?)null: Convert.ToDecimal(happyValue));
-                angryList.Add(angryValue == "" ?    (decimal?)null: Convert.ToDecimal(angryValue));
-                sadList.Add(sadValue == "" ?      (decimal?)null: Convert.ToDecimal(sadValue));
-                unknownList.Add(unknownValue == "" ?   (decimal?)null: Convert.ToDecimal(unknownValue));
-                calmList.Add(calmValue == "" ?     (decimal?)null: Convert.ToDecimal(calmValue));
-                digustedList.Add(digustedValue == "" ? (decimal?)null: Convert.ToDecimal(digustedValue));
-                surprisedList.Add(surprisedValue == "" ?(decimal?)null: Convert.ToDecimal(surprisedValue));
-                confusedList.Add(confusedValue == "" ? (decimal?)null: Convert.ToDecimal(confusedValue));
+                happyList.Add(happyValue == "" ? (decimal?)null : Convert.ToDecimal(happyValue));
+                angryList.Add(angryValue == "" ? (decimal?)null : Convert.ToDecimal(angryValue));
+                sadList.Add(sadValue == "" ? (decimal?)null : Convert.ToDecimal(sadValue));
+                unknownList.Add(unknownValue == "" ? (decimal?)null : Convert.ToDecimal(unknownValue));
+                calmList.Add(calmValue == "" ? (decimal?)null : Convert.ToDecimal(calmValue));
+                digustedList.Add(digustedValue == "" ? (decimal?)null : Convert.ToDecimal(digustedValue));
+                surprisedList.Add(surprisedValue == "" ? (decimal?)null : Convert.ToDecimal(surprisedValue));
+                confusedList.Add(confusedValue == "" ? (decimal?)null : Convert.ToDecimal(confusedValue));
             }
 
 
@@ -274,7 +286,7 @@ namespace Smood.BusinessLayer.Workers.Event
 
         public AvgAge GetAverageAge(int eventId, string _elasticUrl)
         {
-            var searchResult = DoElasticSearch(_elasticUrl, new
+            var searchResult = ElasticDoSearch(_elasticUrl, new
             {
                 size = 0,
                 aggs = new {
@@ -301,6 +313,43 @@ namespace Smood.BusinessLayer.Workers.Event
             {
                 MinAge = (int)Math.Round(Convert.ToDecimal(avg_ageMin), 0),
                 MaxAge = (int)Math.Round(Convert.ToDecimal(avg_ageMax), 0)
+            };
+        }
+
+        public PieDTO GetFemaleMaleCount(int eventId, string _elasticUrl)
+        {
+            var femaleCount = ElasticDoCount(_elasticUrl, new
+            {
+                query = new
+                {
+                    match_phrase = new
+                    {
+                        gender = new
+                        {
+                            query = "Female"
+                        }
+                    }
+                }
+            }).Body;
+
+            var maleCount = ElasticDoCount(_elasticUrl, new
+            {
+                query = new
+                {
+                    match_phrase = new
+                    {
+                        gender = new
+                        {
+                            query = "Male"
+                        }
+                    }
+                }
+            }).Body;
+
+            return new PieDTO
+            {
+                Labels = new List<string> { "Female", "Male" },
+                Data = new List<decimal> { Convert.ToInt32(JObject.Parse(femaleCount)["count"]), Convert.ToInt32(JObject.Parse(maleCount)["count"]) }
             };
         }
 
