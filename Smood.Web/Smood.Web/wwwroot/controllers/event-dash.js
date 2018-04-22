@@ -16,7 +16,7 @@
                     $scope.cards.forEach(card => {
                         card.imageUrl = card.imageUrl
                             ? card.imageUrl
-                            : "http://via.placeholder.com/350x150"
+                            : "content/images/no-image.svg"
                     });
                 })
                 .catch(err => {
@@ -50,8 +50,28 @@
                 });
             };
 
+            $scope.deleteEvent = card => {
+                $rootScope.showLoadingAnimation();
+                apiConnector.delete('event', card.eventId)
+                    .then(() => {
+                        var cards = $scope.cards;
+
+                        for (var i = 0; i < cards.length; i++) {
+                            if (cards[i].eventId == card.eventId) {
+                                $scope.cards.splice(i, 1);
+                                break;
+                            }
+                        }
+                        $rootScope.hideLoadingAnimation(true);
+                    })
+                    .catch(err => {
+                        $rootScope.hideLoadingAnimation(true);
+                        $location.path("/error");
+                    });
+            };
+
             $scope.goToEvent = card => {
                 $location.path('/event/view/' + card.eventId)
-            }
+            };
         });
 })();

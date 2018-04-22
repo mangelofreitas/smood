@@ -2,7 +2,12 @@
     'use strict';
 
     angular.module('smoodWebApp')
-        .config(function ($routeProvider, $locationProvider) {
+        .config(function ($routeProvider, $locationProvider, ChartJsProvider) {
+
+            ChartJsProvider.setOptions({
+                chartColors: ['#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+                responsive: true
+            });
 
             var _getRoute = function (entityName, controller, fileName) {
                 return {
