@@ -69,7 +69,6 @@
                 $rootScope.hideLoadingAnimation(true);
             });
 
-            $scope.uploadImages = ($files) => {                
             $scope.uploadImages = ($files) => {      
                 $rootScope.showLoadingAnimation();          
                 apiConnector.postImage($routeParams.id, "event", $files)
