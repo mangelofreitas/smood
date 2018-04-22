@@ -7,9 +7,11 @@
         ngf-multiple="multiple"
         ngf-accept="['image/png','image/jpeg']"        
         ng-value="
-            (model.length ? 
-            model.length 
-            : model.name ? 1 : 0 )
-            + ' file(s) selected'"
+            showValue ?             
+                (model.length ? 
+                model.length 
+                : model.name ? 1 : 0 )
+                + ' file(s) selected'
+            : ''"                
         />
 </div>

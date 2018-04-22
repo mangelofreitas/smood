@@ -1,4 +1,6 @@
-﻿using Smood.DataLayer.Models;
+﻿using Smood.BusinessLayer.Workers.Event.DTO.DataViz;
+using Smood.BusinessLayer.Workers.Event.DTO.ElasticSearch;
+using Smood.DataLayer.Models;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +15,10 @@ namespace Smood.BusinessLayer.Workers.Event.DTO
         public IEnumerable<string> PhotoUrls { get; set; }
 
         public string Code { get; set; }
+
+        public AvgAge AvgAge { get; set; }
+
+        public PieDTO GenderCount { get; set; }
 
         #region Apply Changes
 

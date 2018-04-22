@@ -1,11 +1,15 @@
 ﻿using Elasticsearch.Net;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Smood.BusinessLayer.Base.Workers;
 using Smood.BusinessLayer.Workers.Event.DTO;
+using Smood.BusinessLayer.Workers.Event.DTO.DataViz;
+using Smood.BusinessLayer.Workers.Event.DTO.ElasticSearch;
 using Smood.DataLayer.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+//using System.Data.Entity;
 
 namespace Smood.BusinessLayer.Workers.Event
 {
@@ -21,14 +25,25 @@ namespace Smood.BusinessLayer.Workers.Event
 
         #region Private Methods
 
-        private StringResponse DoElasticSearch(string _elasticUrl, object postData)
+        private ElasticLowLevelClient ElasticGetClient(string _elasticUrl)
         {
             var settings = new ConnectionConfiguration(new Uri(_elasticUrl))
-                                .RequestTimeout(TimeSpan.FromMinutes(2));
+                                .RequestTimeout(TimeSpan.FromSeconds(10));
+                                //.RequestTimeout(TimeSpan.FromMinutes(2));
 
-            var lowlevelClient = new ElasticLowLevelClient(settings);
+            return new ElasticLowLevelClient(settings);
+        }
 
-            return lowlevelClient.Search<StringResponse>("shift-simplified", PostData.Serializable(postData));
+        private StringResponse ElasticDoSearch(string _elasticUrl, object postData)
+        {
+
+            return ElasticGetClient(_elasticUrl).Search<StringResponse>("shift-simplified", PostData.Serializable(postData));
+        }
+
+        private StringResponse ElasticDoCount(string _elasticUrl, object postData)
+        {
+
+            return ElasticGetClient(_elasticUrl).Count<StringResponse>("shift-simplified", PostData.Serializable(postData));
         }
 
         #endregion
@@ -48,10 +63,10 @@ namespace Smood.BusinessLayer.Workers.Event
             });
         }
 
-        public EventUpdateDTO GetById(int eventId, string basePath)
+        public EventUpdateDTO GetById(int eventId, string basePath, string _elasticUrl)
         {
             //var basePath = Directory.GetCurrentDirectory();
-            return DatabaseContext.Events.Where(e => e.EventId == eventId && e.DeleteDate == null).Select(e => new EventUpdateDTO
+            var dto = DatabaseContext.Events.Include("EventPhotos").Where(e => e.EventId == eventId && e.DeleteDate == null).Select(e => new EventUpdateDTO
             {
                 EventId = e.EventId,
                 Name = e.Name,
@@ -63,6 +78,11 @@ namespace Smood.BusinessLayer.Workers.Event
                 EndDate = e.EndDate,
                 StartDate = e.StartDate
             }).FirstOrDefault();
+
+            dto.AvgAge = GetAverageAge(eventId, _elasticUrl);
+            dto.GenderCount = GetFemaleMaleCount(eventId, _elasticUrl);
+
+            return dto;
         }
 
         #endregion
@@ -71,298 +91,306 @@ namespace Smood.BusinessLayer.Workers.Event
 
         public ChartDTO GetEmotionsByRange(int eventId, DateTime startDate, DateTime endDate, string _elasticUrl)
         {
+            StringResponse searchResult = null;
+
             // TODO: filter elasticsearch by event code
             var @event = DatabaseContext.Events.FirstOrDefault(e => e.EventId == eventId && e.DeleteDate == null);
 
-            var settings = new ConnectionConfiguration(new Uri(_elasticUrl))
-                                .RequestTimeout(TimeSpan.FromMinutes(2));
-
-            var lowlevelClient = new ElasticLowLevelClient(settings);
-
-            var searchResult = DoElasticSearch(_elasticUrl, new
+            try
             {
-                size = 0,
-                query = new
+                searchResult = ElasticDoSearch(_elasticUrl, new
                 {
-                    range = new
+                    size = 0,
+                    query = new
                     {
-                        timestamp = new
+                        range = new
                         {
-                            gte = startDate,
-                            lt = endDate
-                        }
-                    }
-                },
-                aggs = new
-                {
-                    groupByHour = new
-                    {
-                        date_histogram = new
-                        {
-                            field = "timestamp",
-                            interval = "hour",
-                            //format = "yyyy-MM-dd",
-                            min_doc_count = 0,
-                            extended_bounds = new
+                            timestamp = new
                             {
-                                min = startDate,
-                                max = endDate
-                            }
-                        },
-                        aggs = new
-                        {
-                            avgHappy = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.HAPPY"
-                                }
-                            },
-                            avgAngry = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.ANGRY"
-                                }
-                            },
-                            avgSad = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.SAD"
-                                }
-                            },
-                            avgUnknown = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.UNKNOWN"
-                                }
-                            },
-                            avgCalm = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.CALM"
-                                }
-                            },
-                            avgDigusted = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.DISGUSTED"
-                                }
-                            },
-                            avgSurprised = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.SURPRISED"
-                                }
-                            },
-                            avgConfused = new
-                            {
-                                avg = new
-                                {
-                                    field = "emotions.CONFUSED"
-                                }
+                                gte = startDate,
+                                lt = endDate
                             }
                         }
+                    },
+                    aggs = new
+                    {
+                        groupByHour = new
+                        {
+                            date_histogram = new
+                            {
+                                field = "timestamp",
+                                interval = "hour",
+                                //format = "yyyy-MM-dd",
+                                min_doc_count = 0,
+                                extended_bounds = new
+                                {
+                                    min = startDate,
+                                    max = endDate
+                                }
+                            },
+                            aggs = new
+                            {
+                                avgHappy = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.HAPPY"
+                                    }
+                                },
+                                avgAngry = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.ANGRY"
+                                    }
+                                },
+                                avgSad = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.SAD"
+                                    }
+                                },
+                                avgUnknown = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.UNKNOWN"
+                                    }
+                                },
+                                avgCalm = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.CALM"
+                                    }
+                                },
+                                avgDigusted = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.DISGUSTED"
+                                    }
+                                },
+                                avgSurprised = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.SURPRISED"
+                                    }
+                                },
+                                avgConfused = new
+                                {
+                                    avg = new
+                                    {
+                                        field = "emotions.CONFUSED"
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            });
-
-            //if ()
-            //{
-            var jsonResponse = JObject.Parse(searchResult.Body);
-            var buckets = jsonResponse["aggregations"]["groupByHour"]["buckets"].ToArray();
+                });
+            }
+            catch { }
 
             var finalResponse = new ChartDTO
             {
                 Labels = new List<string>(),
                 Series = new List<ChartSeriesDTO>()
             };
-                                  
 
-            var happyList = new List<decimal?>();
-            var angryList = new List<decimal?>();
-            var sadList = new List<decimal?>();
-            var unknownList = new List<decimal?>();
-            var calmList = new List<decimal?>();
-            var digustedList = new List<decimal?>();
-            var surprisedList = new List<decimal?>();
-            var confusedList = new List<decimal?>();
-
-            foreach (var bucket in buckets)
+            if (searchResult != null && searchResult.Success)
             {
-                var label = bucket["key_as_string"].ToString();
-                finalResponse.Labels.Add(label);
+                var jsonResponse = JObject.Parse(searchResult.Body);
+                var buckets = jsonResponse["aggregations"]["groupByHour"]["buckets"].ToArray();
 
-                var happyValue = bucket["avgHappy"]["value"].ToString();
-                var angryValue = bucket["avgAngry"]["value"].ToString();
-                var sadValue = bucket["avgSad"]["value"].ToString();
-                var unknownValue = bucket["avgUnknown"]["value"].ToString();
-                var calmValue = bucket["avgCalm"]["value"].ToString();
-                var digustedValue = bucket["avgDigusted"]["value"].ToString();
-                var surprisedValue = bucket["avgSurprised"]["value"].ToString();
-                var confusedValue = bucket["avgConfused"]["value"].ToString();
+                var happyList = new List<decimal?>();
+                var angryList = new List<decimal?>();
+                var sadList = new List<decimal?>();
+                var unknownList = new List<decimal?>();
+                var calmList = new List<decimal?>();
+                var digustedList = new List<decimal?>();
+                var surprisedList = new List<decimal?>();
+                var confusedList = new List<decimal?>();
+
+                foreach (var bucket in buckets)
+                {
+                    var label = bucket["key_as_string"].ToString();
+                    finalResponse.Labels.Add(label);
+
+                    var happyValue = bucket["avgHappy"]["value"].ToString();
+                    var angryValue = bucket["avgAngry"]["value"].ToString();
+                    var sadValue = bucket["avgSad"]["value"].ToString();
+                    var unknownValue = bucket["avgUnknown"]["value"].ToString();
+                    var calmValue = bucket["avgCalm"]["value"].ToString();
+                    var digustedValue = bucket["avgDigusted"]["value"].ToString();
+                    var surprisedValue = bucket["avgSurprised"]["value"].ToString();
+                    var confusedValue = bucket["avgConfused"]["value"].ToString();
 
 
-                happyList.Add(happyValue == "" ?    (decimal?)null: Convert.ToDecimal(happyValue));
-                angryList.Add(angryValue == "" ?    (decimal?)null: Convert.ToDecimal(angryValue));
-                sadList.Add(sadValue == "" ?      (decimal?)null: Convert.ToDecimal(sadValue));
-                unknownList.Add(unknownValue == "" ?   (decimal?)null: Convert.ToDecimal(unknownValue));
-                calmList.Add(calmValue == "" ?     (decimal?)null: Convert.ToDecimal(calmValue));
-                digustedList.Add(digustedValue == "" ? (decimal?)null: Convert.ToDecimal(digustedValue));
-                surprisedList.Add(surprisedValue == "" ?(decimal?)null: Convert.ToDecimal(surprisedValue));
-                confusedList.Add(confusedValue == "" ? (decimal?)null: Convert.ToDecimal(confusedValue));
-            }
-
-
-            finalResponse.Series = new List<ChartSeriesDTO>
-            {
-                new ChartSeriesDTO {
-                    Label = "Happy",
-                    Data = happyList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Angry",
-                    Data = angryList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Sad",
-                    Data = sadList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Unknown",
-                    Data = unknownList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Calm",
-                    Data = calmList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Digusted",
-                    Data = digustedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Surprised",
-                    Data = surprisedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Confused",
-                    Data = confusedList
+                    happyList.Add(happyValue == "" ? (decimal?)null : Convert.ToDecimal(happyValue));
+                    angryList.Add(angryValue == "" ? (decimal?)null : Convert.ToDecimal(angryValue));
+                    sadList.Add(sadValue == "" ? (decimal?)null : Convert.ToDecimal(sadValue));
+                    unknownList.Add(unknownValue == "" ? (decimal?)null : Convert.ToDecimal(unknownValue));
+                    calmList.Add(calmValue == "" ? (decimal?)null : Convert.ToDecimal(calmValue));
+                    digustedList.Add(digustedValue == "" ? (decimal?)null : Convert.ToDecimal(digustedValue));
+                    surprisedList.Add(surprisedValue == "" ? (decimal?)null : Convert.ToDecimal(surprisedValue));
+                    confusedList.Add(confusedValue == "" ? (decimal?)null : Convert.ToDecimal(confusedValue));
                 }
-            };
+
+
+                finalResponse.Series = new List<ChartSeriesDTO>
+                {
+                    new ChartSeriesDTO {
+                        Label = "Happy",
+                        Data = happyList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Angry",
+                        Data = angryList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Sad",
+                        Data = sadList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Unknown",
+                        Data = unknownList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Calm",
+                        Data = calmList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Digusted",
+                        Data = digustedList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Surprised",
+                        Data = surprisedList
+                    },
+                    new ChartSeriesDTO
+                    {
+                        Label = "Confused",
+                        Data = confusedList
+                    }
+                };
+            }
 
             return finalResponse;
         }
 
-        public ChartDTO GetAverageAge(int eventId, string _elasticUrl)
+        public AvgAge GetAverageAge(int eventId, string _elasticUrl)
         {
-            var searchResult = DoElasticSearch(_elasticUrl, new
+            StringResponse searchResult = null;
+
+            try
             {
-                size = 0,
-            });
+                searchResult = ElasticDoSearch(_elasticUrl, new
+                {
+                    size = 0,
+                    aggs = new {
+                        avg_ageMin = new {
+                            avg = new {
+                                field = "ageMin"
+                            }
+                        },
+                        avg_ageMax = new
+                        {
+                            avg = new
+                            {
+                                field = "ageMax"
+                            }
+                        }
+                    }
+                });
+            }
+            catch { }
 
-            //if ()
-            //{
-            var jsonResponse = JObject.Parse(searchResult.Body);
-            var buckets = jsonResponse["aggregations"]["groupByHour"]["buckets"].ToArray();
+            string avg_ageMin = "0";
+            string avg_ageMax = "0";
 
-            var finalResponse = new ChartDTO
+            if (searchResult != null && searchResult.Success)
             {
-                Labels = new List<string>(),
-                Series = new List<ChartSeriesDTO>()
-            };
-
-
-            var happyList = new List<decimal?>();
-            var angryList = new List<decimal?>();
-            var sadList = new List<decimal?>();
-            var unknownList = new List<decimal?>();
-            var calmList = new List<decimal?>();
-            var digustedList = new List<decimal?>();
-            var surprisedList = new List<decimal?>();
-            var confusedList = new List<decimal?>();
-
-            foreach (var bucket in buckets)
-            {
-                var label = bucket["key_as_string"].ToString();
-                finalResponse.Labels.Add(label);
-
-                var happyValue = bucket["avgHappy"]["value"].ToString();
-                var angryValue = bucket["avgAngry"]["value"].ToString();
-                var sadValue = bucket["avgSad"]["value"].ToString();
-                var unknownValue = bucket["avgUnknown"]["value"].ToString();
-                var calmValue = bucket["avgCalm"]["value"].ToString();
-                var digustedValue = bucket["avgDigusted"]["value"].ToString();
-                var surprisedValue = bucket["avgSurprised"]["value"].ToString();
-                var confusedValue = bucket["avgConfused"]["value"].ToString();
-
-
-                happyList.Add(happyValue == "" ? (decimal?)null : Convert.ToDecimal(happyValue));
-                angryList.Add(angryValue == "" ? (decimal?)null : Convert.ToDecimal(angryValue));
-                sadList.Add(sadValue == "" ? (decimal?)null : Convert.ToDecimal(sadValue));
-                unknownList.Add(unknownValue == "" ? (decimal?)null : Convert.ToDecimal(unknownValue));
-                calmList.Add(calmValue == "" ? (decimal?)null : Convert.ToDecimal(calmValue));
-                digustedList.Add(digustedValue == "" ? (decimal?)null : Convert.ToDecimal(digustedValue));
-                surprisedList.Add(surprisedValue == "" ? (decimal?)null : Convert.ToDecimal(surprisedValue));
-                confusedList.Add(confusedValue == "" ? (decimal?)null : Convert.ToDecimal(confusedValue));
+                var jsonResponse = JObject.Parse(searchResult.Body);
+                avg_ageMin = jsonResponse["aggregations"]["avg_ageMin"]["value"].ToString();
+                avg_ageMax = jsonResponse["aggregations"]["avg_ageMax"]["value"].ToString();
             }
 
-
-            finalResponse.Series = new List<ChartSeriesDTO>
+            return new AvgAge
             {
-                new ChartSeriesDTO {
-                    Label = "Happy",
-                    Data = happyList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Angry",
-                    Data = angryList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Sad",
-                    Data = sadList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Unknown",
-                    Data = unknownList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Calm",
-                    Data = calmList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Digusted",
-                    Data = digustedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Surprised",
-                    Data = surprisedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Confused",
-                    Data = confusedList
-                }
+                MinAge = (int)Math.Round(Convert.ToDecimal(avg_ageMin), 0),
+                MaxAge = (int)Math.Round(Convert.ToDecimal(avg_ageMax), 0)
             };
+        }
 
-            return finalResponse;
+        public PieDTO GetFemaleMaleCount(int eventId, string _elasticUrl)
+        {
+            string femaleCount = "0";
+            string maleCount = "0";
+
+            StringResponse femaleCountResponse = null;
+
+            try
+            {
+                femaleCountResponse = ElasticDoCount(_elasticUrl, new
+                {
+                    query = new
+                    {
+                        match_phrase = new
+                        {
+                            gender = new
+                            {
+                                query = "Female"
+                            }
+                        }
+                    }
+                });
+            }
+            catch { }
+
+
+            StringResponse maleCountResponse = null;
+
+            try
+            {
+                maleCountResponse = ElasticDoCount(_elasticUrl, new
+                {
+                    query = new
+                    {
+                        match_phrase = new
+                        {
+                            gender = new
+                            {
+                                query = "Male"
+                            }
+                        }
+                    }
+                });
+            }
+            catch { }
+
+            if (femaleCountResponse != null && femaleCountResponse.Success)
+            {
+                femaleCount = JObject.Parse(femaleCountResponse.Body)["count"].ToString();
+            }
+
+            if (maleCountResponse != null && maleCountResponse.Success)
+            {
+                maleCount = JObject.Parse(maleCountResponse.Body)["count"].ToString();
+            }
+
+            return new PieDTO
+            {
+                Labels = new List<string> { "Female", "Male" },
+                Data = new List<decimal> { Convert.ToInt32(femaleCount), Convert.ToInt32(maleCount) }
+            };
         }
 
         #endregion

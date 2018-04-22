@@ -79,29 +79,31 @@
                 $rootScope.hideLoadingAnimation(true);
             });
 
-            $scope.uploadImages = ($files) => {
-
-                var filesPromise = Upload.base64DataUrl($files);
-                var postPromise = filesPromise.then( filesData => {
-                    filesData = filesData.map( fd => { 
-                        fd = fd.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "")
-                        return fd;
-                    });                    
-                    return apiConnector.postImage($routeParams.id, "event", filesData)
-                });
-
-                postPromise.then( result => {
+            $scope.uploadImages = ($files) => {      
+                $rootScope.showLoadingAnimation();          
+                apiConnector.postImage($routeParams.id, "event", $files)
+                .then( result => {
                     console.log(result);
+                    result.data.map( r => $scope.event.photoUrls.push(r));                
+                    $rootScope.hideLoadingAnimation(true);
                 })
                 .catch(err => {
                     $location.path("/error");
                     $rootScope.hideLoadingAnimation(true);                    
                 });
-
             };
 
-            var _submit = submitEvent => {
-            };
+            var _submit = submitEvent => {                
+                $rootScope.showLoadingAnimation();     
+                apiConnector.put($routeParams.id, "event", $scope.event)
+                .then( response => {
+                    $rootScope.hideLoadingAnimation(true);          
+                })
+                .catch( err => {
+                    $location.path("/error");
+                    $rootScope.hideLoadingAnimation(true);
+                });
+            };     
 
             $scope.submit = _submit;
 

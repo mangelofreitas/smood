@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('smoodWebApp').service('apiConnector', function ($http, $window, $rootScope) {
+    angular.module('smoodWebApp').service('apiConnector', function ($http, $window, $rootScope, Upload) {
         const url = $rootScope.constants.baseApiUrl;
 
         this.post = (entityName, data) => {            
@@ -12,10 +12,13 @@
         };
 
         this.postImage = (id, entityName, data) => {
-            var promise = $http.post(url.concat(entityName, "/", id, "/photo"), data).then(response => {
-                return response.data;
-            });
-            return promise;            
+
+            return Upload.upload({
+                url: url.concat(entityName, "/", id, "/photo"),
+                data: {
+                    files: data
+                }
+            });       
         };
 
         this.put = (id, entityName, data) => {

@@ -11,7 +11,9 @@
                 type: '@',
                 placeholder: '@',
                 inputId: '@',
-                onChange: '=?'
+                onChange: '=?',
+                required: '=?',
+                disabled: '=?'
             },
             controller: function($scope, $timeout) {
                 if(!$scope.type) {
