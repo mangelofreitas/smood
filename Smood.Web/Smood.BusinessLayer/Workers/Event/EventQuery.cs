@@ -82,6 +82,8 @@ namespace Smood.BusinessLayer.Workers.Event
             dto.AvgAge = GetAverageAge(eventId, _elasticUrl);
             dto.GenderCount = GetFemaleMaleCount(eventId, _elasticUrl);
             dto.FacesCount = GetFacesCount(eventId, _elasticUrl);
+            dto.PhotosCount = 0;
+            //dto.PhotosCount = GetPhotosCount(eventId, _elasticUrl);
 
             return dto;
         }
@@ -110,6 +112,13 @@ namespace Smood.BusinessLayer.Workers.Event
                             {
                                 gte = startDate,
                                 lt = endDate
+                            }
+                        },
+                        match_event = new
+                        {
+                            eventId = new
+                            {
+                                query = eventId.ToString()
                             }
                         }
                     },
@@ -296,6 +305,16 @@ namespace Smood.BusinessLayer.Workers.Event
                 searchResult = ElasticDoSearch(_elasticUrl, new
                 {
                     size = 0,
+                    query = new
+                    {
+                        match_event = new
+                        {
+                            eventId = new
+                            {
+                                query = eventId.ToString()
+                            }
+                        }
+                    },
                     aggs = new {
                         avg_ageMin = new {
                             avg = new {
@@ -350,6 +369,13 @@ namespace Smood.BusinessLayer.Workers.Event
                             {
                                 query = "Female"
                             }
+                        },
+                        match_event = new
+                        {
+                            eventId = new
+                            {
+                                query = eventId.ToString()
+                            }
                         }
                     }
                 });
@@ -401,7 +427,55 @@ namespace Smood.BusinessLayer.Workers.Event
 
             try
             {
-                facesCountResponse = ElasticDoCount(_elasticUrl, new { });
+                facesCountResponse = ElasticDoCount(_elasticUrl, new {
+                    query = new
+                    {
+                        match_event = new
+                        {
+                            eventId = new
+                            {
+                                query = eventId.ToString()
+                            }
+                        }
+                    }
+                });
+            }
+            catch { }
+
+            if (facesCountResponse != null && facesCountResponse.Success)
+            {
+                facesCount = Convert.ToInt32(JObject.Parse(facesCountResponse.Body)["count"].ToString());
+            }
+
+            return facesCount;
+        }
+
+        public int GetPhotosCount(int eventId, string _elasticUrl)
+        {
+            int facesCount = 0;
+            StringResponse facesCountResponse = null;
+
+            try
+            {
+                facesCountResponse = ElasticDoCount(_elasticUrl, new {
+                    query = new
+                    {
+                        match_phrase = new
+                        {
+                            imageId = new
+                            {
+                                query = "Female"
+                            }
+                        },
+                        match_event = new
+                        {
+                            eventId = new
+                            {
+                                query = eventId.ToString()
+                            }
+                        }
+                    }
+                });
             }
             catch { }
 

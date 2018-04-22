@@ -22,6 +22,8 @@ namespace Smood.BusinessLayer.Workers.Event.DTO
 
         public int FacesCount { get; set; }
 
+        public int PhotosCount { get; set; }
+
         #region Apply Changes
 
         public void ApplyChanges(SmoodEvent entity, bool isNew)
