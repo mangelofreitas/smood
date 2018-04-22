@@ -22,30 +22,35 @@ def take_photo():
     if res != 0:
         raise Exception("Unable to take photo")
 
-def get_photo_name():
-    res = check_output(['adb', 'shell', 'ls', '/sdcard/DCIM/Camera'])
+def take_photo_tap():
+    res = call(['adb', 'shell', 'input', 'tap', '500', '1800'])
+    time.sleep(20)
+
+def get_photo_name(folder_path='/sdcard/DCIM/Camera'):
+
+    res = check_output(['adb', 'shell', 'ls \"/storage/emulated/0/PlayMemories Mobile\"'])
     photo = res.replace('\n', '').split(' ')
     if photo:
         return photo[0]
     else:
         return None
 
-def pull_photo(photo):
+def pull_photo(photo='', folder_path='/sdcard/DCIM/Camera/{}'):
     #Invokes adb pull via shell to pull the last taken photo
     path_to_save = '/tmp/{}'.format(photo)
-    res = call(['adb', 'pull', '/sdcard/DCIM/Camera/{}'.format(photo), path_to_save])
+    res = call(['adb', 'pull', folder_path.format(photo), path_to_save])
 
-def clean_up_photo(photo):
-    res = check_output(['adb', 'shell', 'rm', '/sdcard/DCIM/Camera/{}'.format(photo)])
+def clean_up_photo(photo='', folder_path='/sdcard/DCIM/Camera/{}'):
+    res = check_output(['adb', 'shell', 'rm', folder_path.format(photo)])
     res = check_output(['rm', '/tmp/{}'.format(photo)])
     rekognition.delete_photo(photo)
 
 
 
-def threaded_loop():
-    take_photo()
-    photo = get_photo_name()
-    pull_photo(photo)
+def threaded_loop(event='shiftappens'):
+    take_photo_tap()
+    photo = get_photo_name(folder_path='/storage/emulated/0/PlayMemories\ Mobile')
+    pull_photo(photo, folder_path='/storage/emulated/0/PlayMemories Mobile/{}')
     with open("/tmp/{}".format(photo), "r") as f:
         print(rekognition.send_photo(f, photo))
 
@@ -59,19 +64,22 @@ def threaded_loop():
         result = rekognition.index_faces(imageS3)
         result['timestamp'] = datetime.now()
         faces = rekognition.parse_result(result)
+        i = 0
         for face in faces:
             face['timestamp'] = datetime.now()
-            db.index(index='shift-simplified', doc_type='emotions-simplified', id=photo, body=face)
+            face['event'] = event
+            db.index(index='shift-simplified', doc_type='emotions-simplified', id=photo+'-{}'.format(str(i)), body=face)
+            i = i + 1
         db.index(index='shift', doc_type='emotions', id=photo, body=result)
     except Exception as e:
         print(e)
-    clean_up_photo(photo)
+    clean_up_photo(photo, folder_path='/storage/emulated/0/PlayMemories Mobile/{}')
 
-    threading.Timer(10, threaded_loop).start()
+    threading.Timer(30, threaded_loop).start()
 try:
     rekognition.create_collection(rekognition.collection_id)
 except Exception as e:
     print("collection already exists")
 
-take_photo()
+# take_photo_tap()
 threaded_loop()
