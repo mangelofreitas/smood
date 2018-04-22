@@ -32,7 +32,7 @@
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 4">
         <div class="card text-center" style="width: 12em; margin-left: auto; margin-right: auto">
-            <img class="card-img-top" src="{{baseUrl + event.imageUrl}}">
+            <img class="card-img-top" src="{{event.imageUrl ? baseUrl+'/'+event.imageUrl : 'content/images/no-image.svg'}}">
             <div class="card-body">
                 <p class="card-text">Main image</p>
             </div>

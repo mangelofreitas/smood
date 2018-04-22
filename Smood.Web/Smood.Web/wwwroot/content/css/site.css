@@ -88,7 +88,17 @@ div.chart-panel-wrapper {
   .card-custom .card-info-wrapper {
     padding: 1em;
     z-index: 1;
-    position: absolute; }
+    position: absolute;
+    width: 100%; }
+    .card-custom .card-info-wrapper .round-btn-group {
+      text-align: center;
+      width: 100%; }
+      .card-custom .card-info-wrapper .round-btn-group a.btn {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out; }
+
+.btn.btn-round {
+  border-radius: 50%; }
 
 div.card-hover {
   margin-bottom: 1.5em;
@@ -108,10 +118,10 @@ div.card-hover {
     bottom: 75%;
     background-color: rgba(0, 0, 0, 0.5);
     transition: bottom 0.25s linear; }
-  div.card-hover div.card:hover {
-    cursor: pointer; }
-    div.card-hover div.card:hover .card-img-overlay {
-      bottom: 50%; }
+  div.card-hover div.card:hover .card-img-overlay {
+    bottom: 50%; }
+  div.card-hover div.card:hover .round-btn-group a.btn {
+    opacity: 1; }
 
 header {
   position: fixed;

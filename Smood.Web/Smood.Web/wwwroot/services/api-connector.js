@@ -11,6 +11,11 @@
             return promise;
         };
 
+        this.delete = (entityName, id) => {
+            var promise = $http.delete(url.concat(entityName, "/", id)).then(response => { });
+            return promise
+        };
+
         this.postImage = (id, entityName, data) => {
 
             return Upload.upload({
