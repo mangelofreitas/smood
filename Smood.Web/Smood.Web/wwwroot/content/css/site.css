@@ -1,4 +1,4 @@
-login-menu .navbar-brand *:first-child {
+﻿login-menu .navbar-brand *:first-child {
   font-family: "Segoe UI", sans-serif; }
 
 body {
@@ -174,3 +174,14 @@ nav.breadcrumb-secondary-wrapper {
   display: block;
   margin-left: auto;
   margin-right: auto; }
+
+.sousa-card {
+  display: inline-block;
+  min-width: 12em;
+  text-align: center; }
+  .sousa-card .card-body .row > .col-6:first-child {
+    text-align: right;
+    border-right: 1px solid #c7c7c7; }
+  .sousa-card .card-body .row > .col-6:last-child {
+    text-align: left; }
+

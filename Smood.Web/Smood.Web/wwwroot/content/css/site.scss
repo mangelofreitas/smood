@@ -236,3 +236,20 @@ nav.breadcrumb-secondary-wrapper {
     margin-left: auto;
     margin-right: auto;
 }
+
+.sousa-card {
+    display: inline-block;
+    min-width: 12em;
+    text-align: center;
+
+    .card-body .row {
+        > .col-6:first-child {
+            text-align: right;
+                border-right: 1px solid #c7c7c7;
+        }
+
+        > .col-6:last-child {
+            text-align: left;
+        }
+    }
+}

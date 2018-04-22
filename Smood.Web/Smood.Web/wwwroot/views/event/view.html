@@ -7,11 +7,14 @@
             <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 2}" ng-click="changeTab(2, false)"><i class="fa fa-venus-mars" aria-hidden="true"></i> <span>Gender</span></button>
         </div>
         <div class="btn-mask">
+            <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 5}" ng-click="changeTab(5, false)"><i class="fa fa-bar-chart" aria-hidden="true"></i> <span>General data</span></button>
+        </div>
+        <div class="btn-mask">
             <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 3}" ng-click="changeTab(3, true)"><i class="fa fa-wrench" aria-hidden="true"></i> <span>Configurations</span></button>
         </div>
         <div class="btn-mask">
             <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 4}" ng-click="changeTab(4, false)"><i class="fa fa-picture-o" aria-hidden="true"></i> <span>Images</span></button>
-        </div>        
+        </div>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 1">
         <chart-dir ng-if="emotionsChartData" dataset="emotionsChartData.series" labels="emotionsChartData.labels" text-title="Emotion chart" id="emotions-chart"></chart-dir>
@@ -20,6 +23,23 @@
         <!--<chart-pie dataset="[25, 75]" labels="['Female', 'Male']" text-title="Gender chart"></chart-pie>-->
         <chart-pie dataset="event.genderCount.data" labels="event.genderCount.labels" text-title="Gender chart"></chart-pie>
     </div>
+    <div class="tab-wrapper" ng-show="tabIndex == 5">
+        <div class="card sousa-card">
+            <div class="card-body">
+                <h5 class="card-title">Ages</h5>
+                <div class="row">
+                    <div class="col-6">
+                        {{event.avgAge.minAge}}
+                    </div>
+                    <div class="col-6">
+                        {{event.avgAge.maxAge}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div># of photos: 241</div>
+        <div># of faces: 378</div>
+    </div>
     <div class="tab-wrapper" ng-show="tabIndex == 3">
         <form id="form-submit" ng-submit="submit($event);">
             <input-custom id="name" label="Name" model="event.name" required="true"></input-custom>
@@ -27,7 +47,7 @@
             <input-custom id="description" label="Description" model="event.description" required="true"></input-custom>
             <input-custom id="start-date" type="date" label="Start Date" model="event.startDate" required="true"></input-custom>
             <input-custom id="end-date" type="date" label="End Date" model="event.endDate" required="true"></input-custom>
-            <input-custom id="location" label="Location" model="event.location" required="true"></input-custom>            
+            <input-custom id="location" label="Location" model="event.location" required="true"></input-custom>
         </form>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 4">
@@ -36,7 +56,7 @@
             <div class="card-body">
                 <p class="card-text">Main image</p>
             </div>
-        </div>          
+        </div>
         <input-file id="file" label="" upload-function="uploadImages" multiple="true" show-value="false"></input-file>
         <div class="row">
             <div class="col-md-3 col-sm-6" ng-repeat="image in event.photoUrls">
