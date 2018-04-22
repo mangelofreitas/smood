@@ -7,6 +7,7 @@ using Smood.BusinessLayer.Workers.Event.DTO;
 using Smood.DataLayer.Context;
 using Smood.Web.Base.Controllers;
 using Smood.Web.Base.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,6 +65,12 @@ namespace Smood.Web.Controllers
             _manipulator.SaveEventPhotos(eventId, _environment.WebRootPath, files);
 
             return Ok();
+        }
+
+        [HttpGet("emotions-timeline")]
+        public ChartDTO GetEmotionsTimeline(DateTime startDate, DateTime endDate)
+        {
+            return _query.GetEmotionsByRange(startDate, endDate);
         }
     }
 }
