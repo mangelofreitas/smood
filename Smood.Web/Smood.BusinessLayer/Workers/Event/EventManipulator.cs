@@ -7,12 +7,35 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Smood.BusinessLayer.Workers.Event
 {
     public class EventManipulator : BaseWorker
     {
         public EventManipulator(DatabaseContext context) : base(context) {}
+
+        #region Private Method
+
+        public void ProcessFilesToAws(string pathToRead, string pythonFilePath)
+        {
+            var start = new ProcessStartInfo();
+            start.FileName = "C:/ProgramData/Anaconda3/python.exe";
+            start.Arguments = string.Format("{0} {1} {2}", pythonFilePath, pathToRead, "shiftappens");
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    Console.Write(result);
+                }
+            }
+        }
+        
+        #endregion
 
         public EventUpdateDTO Save(EventCreateDTO dto, string basePath)
         {
@@ -63,18 +86,18 @@ namespace Smood.BusinessLayer.Workers.Event
             DatabaseContext.SaveChanges();
         }
 
-        public IEnumerable<string> SaveEventPhotos(int eventId, string basePath, IFormFileCollection files)
+        public IEnumerable<string> SaveEventPhotos(int eventId, IHostingEnvironment environment, IFormFileCollection files, string awsAccessKeyId, string awsSecretAccessKey)
         {
             var basePhotoUrl = "content/photo-uploads/event-" + eventId;
 
             var newUrlList = new List<string>();
 
-            var uploads = Path.Combine(basePath, basePhotoUrl);
+            var uploads = Path.Combine(environment.WebRootPath, basePhotoUrl, Guid.NewGuid().ToString());
             foreach (var file in files)
             {
                 if (file.Length > 0)
                 {
-                    var finalPath = Path.Combine(uploads, Path.GetFileNameWithoutExtension(file.FileName) + "-" + Guid.NewGuid() + Path.GetExtension(file.FileName));
+                    var finalPath = Path.Combine(uploads, file.FileName);
 
                     Directory.CreateDirectory(uploads);
                     using (var fileStream = new FileStream(finalPath, FileMode.Create))
@@ -90,12 +113,16 @@ namespace Smood.BusinessLayer.Workers.Event
                         FileType = file.ContentType
                     });
 
-                    newUrlList.Add(finalPath.Replace(basePath, "").Replace("\\", "/"));
+                    newUrlList.Add(finalPath.Replace(environment.WebRootPath, "").Replace("\\", "/"));
                 }
             }
 
             if (files.Count() > 0)
             {
+#if DEBUG
+                //ProcessFilesToAws(uploads, Path.Combine(environment.ContentRootPath, "Python/camera/upload.py"));
+#endif
+
                 DatabaseContext.SaveChanges();
             }
 

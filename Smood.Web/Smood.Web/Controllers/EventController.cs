@@ -73,9 +73,9 @@ namespace Smood.Web.Controllers
         }
 
         [HttpPost("{eventId}/photo")]
-        public IEnumerable<string> PostPhoto(int eventId/*, [FromForm]ICollection<IFormFile> files*/)
+        public IEnumerable<string> PostPhoto(int eventId)
         {
-            return _manipulator.SaveEventPhotos(eventId, _environment.WebRootPath, Request.Form.Files);
+            return _manipulator.SaveEventPhotos(eventId, _environment, Request.Form.Files, _settings.AwsAccessKeyId, _settings.AwsSecretAccessKey);
         }
 
         #endregion
