@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Amazon;
+using Amazon.S3;
+using Amazon.S3.Transfer;
 
 namespace Smood.BusinessLayer.Workers.Event
 {
@@ -18,23 +21,12 @@ namespace Smood.BusinessLayer.Workers.Event
 
         #region Private Method
 
-        public void ProcessFilesToAws(string pathToRead, string pythonFilePath)
+        public void ProcessFilesToAws(Stream fileStream, string fileName, string awsAccessKeyId, string awsSecretAccessKey)
         {
-            var start = new ProcessStartInfo();
-            start.FileName = "C:/ProgramData/Anaconda3/python.exe";
-            start.Arguments = string.Format("{0} {1} {2}", pythonFilePath, pathToRead, "shiftappens");
-            start.UseShellExecute = false;
-            start.RedirectStandardOutput = true;
-            using (Process process = Process.Start(start))
-            {
-                using (StreamReader reader = process.StandardOutput)
-                {
-                    string result = reader.ReadToEnd();
-                    Console.Write(result);
-                }
-            }
+            var fileTransferUtility = new TransferUtility(new AmazonS3Client(awsAccessKeyId, awsSecretAccessKey, RegionEndpoint.EUWest1));
+            fileTransferUtility.Upload(fileStream, "shiftappens", fileName);
         }
-        
+
         #endregion
 
         public EventUpdateDTO Save(EventCreateDTO dto, string basePath)
@@ -88,41 +80,37 @@ namespace Smood.BusinessLayer.Workers.Event
 
         public IEnumerable<string> SaveEventPhotos(int eventId, IHostingEnvironment environment, IFormFileCollection files, string awsAccessKeyId, string awsSecretAccessKey)
         {
-            var basePhotoUrl = "content/photo-uploads/event-" + eventId;
-
             var newUrlList = new List<string>();
 
-            var uploads = Path.Combine(environment.WebRootPath, basePhotoUrl, Guid.NewGuid().ToString());
             foreach (var file in files)
             {
                 if (file.Length > 0)
                 {
-                    var finalPath = Path.Combine(uploads, file.FileName);
+                    var newFileName = "event" + eventId + "-" + Path.GetFileNameWithoutExtension(file.FileName) + "-" + Guid.NewGuid() + Path.GetExtension(file.FileName);
 
-                    Directory.CreateDirectory(uploads);
-                    using (var fileStream = new FileStream(finalPath, FileMode.Create))
+                    using (var stream = new MemoryStream())
                     {
-                        file.CopyTo(fileStream);
+                        file.CopyTo(stream);
+                        stream.Seek(0, SeekOrigin.Begin);
+                        ProcessFilesToAws(stream, newFileName, awsAccessKeyId, awsSecretAccessKey);
                     }
+
+                    var newFileUrl = "http://s3-eu-west-1.amazonaws.com/shiftappens/" + newFileName;
 
                     DatabaseContext.EventPhotos.Add(new EventPhoto
                     {
                         EventId = eventId,
                         FileName = file.FileName,
-                        FilePath = finalPath,
+                        FilePath = newFileUrl,
                         FileType = file.ContentType
                     });
 
-                    newUrlList.Add(finalPath.Replace(environment.WebRootPath, "").Replace("\\", "/"));
+                    newUrlList.Add(newFileUrl);
                 }
             }
 
             if (files.Count() > 0)
             {
-#if DEBUG
-                //ProcessFilesToAws(uploads, Path.Combine(environment.ContentRootPath, "Python/camera/upload.py"));
-#endif
-
                 DatabaseContext.SaveChanges();
             }
 

@@ -20,6 +20,8 @@ namespace Smood.BusinessLayer.Workers.Event.DTO
 
         public PieDTO GenderCount { get; set; }
 
+        public int FacesCount { get; set; }
+
         #region Apply Changes
 
         public void ApplyChanges(SmoodEvent entity, bool isNew)

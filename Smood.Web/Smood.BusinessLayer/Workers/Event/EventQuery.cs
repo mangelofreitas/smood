@@ -73,7 +73,7 @@ namespace Smood.BusinessLayer.Workers.Event
                 Description = e.Description,
                 Location = e.Location,
                 ImageUrl = e.ImagePath.Replace(basePath, "").Replace("\\", "/"),
-                PhotoUrls = e.EventPhotos.Select(p => p.FilePath.Replace(basePath, "").Replace("\\", "/")),
+                PhotoUrls = e.EventPhotos.Select(p => p.FilePath),
                 Code = e.Code,
                 EndDate = e.EndDate,
                 StartDate = e.StartDate
@@ -81,6 +81,7 @@ namespace Smood.BusinessLayer.Workers.Event
 
             dto.AvgAge = GetAverageAge(eventId, _elasticUrl);
             dto.GenderCount = GetFemaleMaleCount(eventId, _elasticUrl);
+            dto.FacesCount = GetFacesCount(eventId, _elasticUrl);
 
             return dto;
         }
@@ -391,6 +392,25 @@ namespace Smood.BusinessLayer.Workers.Event
                 Labels = new List<string> { "Female", "Male" },
                 Data = new List<decimal> { Convert.ToInt32(femaleCount), Convert.ToInt32(maleCount) }
             };
+        }
+
+        public int GetFacesCount(int eventId, string _elasticUrl)
+        {
+            int facesCount = 0;
+            StringResponse facesCountResponse = null;
+
+            try
+            {
+                facesCountResponse = ElasticDoCount(_elasticUrl, new { });
+            }
+            catch { }
+
+            if (facesCountResponse != null && facesCountResponse.Success)
+            {
+                facesCount = Convert.ToInt32(JObject.Parse(facesCountResponse.Body)["count"].ToString());
+            }
+
+            return facesCount;
         }
 
         #endregion
