@@ -16,7 +16,7 @@
                     $scope.cards.forEach(card => {
                         card.imageUrl = card.imageUrl
                             ? card.imageUrl
-                            : "http://via.placeholder.com/350x150"
+                            : "content/images/no-image.svg"
                     });
                 })
                 .catch(err => {

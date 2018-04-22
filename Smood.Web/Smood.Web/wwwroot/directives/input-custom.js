@@ -41,7 +41,7 @@
                         partOfDay = "PM";
                         hoursOfDay -= 12;
                     }
-                    return (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + " " + hoursOfDay + ":" + newDate.getMinutes() + " " + hoursOfDay;
+                    return (newDate.getMonth() + 1) + "/" + newDate.getDate() + "/" + newDate.getFullYear() + " " + hoursOfDay + ":" + newDate.getMinutes() + " " + partOfDay;
                 };
 
                 if ($scope.type == "dateAndPlaceholder") {
