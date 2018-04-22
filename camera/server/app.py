@@ -1,7 +1,8 @@
 import rekognition
-from flask import Flask, render_template, jsonify, make_response
+from flask import Flask, render_template, jsonify, make_response, request
 from random import randint
 import requests
+from threading import Thread
 import threading
 
 app = Flask(__name__)
@@ -16,7 +17,7 @@ def threaded_loop():
     threading.Timer(3, threaded_loop).start()
 
 def event_process(photos, event='shiftappens'):
-    events_in_work[event]['status'] = 'inProgress'
+    events_in_work[event] = {'status':'inProgress'}
     for photo in photos:
         imageS3 = {
             "S3Object": {
@@ -46,7 +47,7 @@ def event():
     input = request.get_json()
     thread = Thread(target=event_process, args=[input['Files'], input['EventId']])
     thread.start()
-    return make_response(200, 'OK')
+    return make_response('OK', 200)
 
 def start_backgroung():
     yourThread = threading.Timer(1, threaded_loop, ())
