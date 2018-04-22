@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- APP NAME MODULE HERE -->
 <html lang="en" ng-app="smoodWebApp">
 
@@ -9,7 +9,7 @@
     <meta name="description" ng-attr-content="$root.constants.description" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <meta http-equiv="Content-Language" content="@SessionUserBusiness.Language" />
-    <link rel="shortcut icon" href="/content/favicons/favicon.ico">
+    <link rel="shortcut icon" href="/content/favicons/logo.ico">
 
     <!--APP TITLE HERE-->
     <title ng-bind="$root.constants.appName"></title>
@@ -29,7 +29,7 @@
 </head>
 
 <body class="page">
-    <nav-bar cancel-function="cancelFunction" submit-function="submitFunction" get-class="getClass"></nav-bar>
+    <nav-bar cancel-function="cancelFunction" submit-function="submitFunction" get-class="getClass" breadcam-function="dataForBreadcrumFunction" show-submit-buttons="showSubmitButtons"></nav-bar>
     <!--<breadcrum></breadcrum>-->
     <div class="content" ng-view></div>
 

@@ -35,12 +35,10 @@ namespace Smood.Web
                 c.SwaggerDoc("v1", new Info { Title = "SMOOD API", Version = "v1" });
             });
 
-            //services.AddCors();
-
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:57623"));
+                    builder => builder.WithOrigins("http://localhost:57623").AllowAnyMethod().AllowAnyHeader());
             });
 
             services.Configure<MvcOptions>(options =>

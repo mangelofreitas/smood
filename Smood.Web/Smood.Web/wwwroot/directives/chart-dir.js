@@ -48,7 +48,7 @@
 
                     
                     var chart = new Chart($("#" + $scope.id + " canvas"), {
-                        type: 'line',
+                        type: $scope.type,
                         data: {
                             labels: $scope.labels,
                             datasets: $scope.dataset,

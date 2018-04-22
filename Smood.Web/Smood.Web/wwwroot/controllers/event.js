@@ -12,9 +12,29 @@
                 $location.path('/event');
             };
 
+            $scope.changeTab = (tabNumber,withSubmit) => {
+                $rootScope.showSubmitButtons = withSubmit;
+                $scope.tabIndex = tabNumber;
+            };
+
+
             $rootScope.showLoadingAnimation();
             apiConnector.get($routeParams.id, "event").then(result => {
-                $scope.cards = result;
+                $scope.card = result;
+                $rootScope.dataForBreadcrumFunction = function () {
+                    return [
+                        {
+                            Text: "Event",
+                            Active: false,
+                            Path: "#/event"
+                        },
+                        {
+                            Text: result.name,
+                            Active: true,
+                            Path: null
+                        }
+                    ];
+                }
                 $rootScope.hideLoadingAnimation(true);
             }, err => {
                 $location.path("/error");
