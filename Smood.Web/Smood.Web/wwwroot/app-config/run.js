@@ -41,7 +41,7 @@
                 description: '',
 
                 baseApiUrl: _baseUrl + 'api/',
-
+                baseUrl: _apiEndpoint,
                 authApiUrl: _baseUrl + 'api/',
             };
 

@@ -42,13 +42,13 @@
                     <input-custom id="end-date" type="date" label="End Date" model="event.endDate" required="true"></input-custom>
                     <input-custom id="location" label="Location" model="event.location" required="true"></input-custom>
                     <input-file id="file" label="Main image" model="event.file" multiple="false"></input-file>             
-                    <img ngf-thumbnail="event.file">
+                    <img class="img-create" ngf-thumbnail="event.file">
                 </div>                
                 <div class="modal-footer">
                     <form ng-submit="submit()">                    
                     <div class="actions-wrapper">
                         <button class="btn btn-success">Save</button>
-                        <button type="button" class="btn btn-secondary">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>                              
                     </form>
                 </div>    
