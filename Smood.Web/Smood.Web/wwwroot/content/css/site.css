@@ -100,6 +100,18 @@ div.chart-panel-wrapper {
 .btn.btn-round {
   border-radius: 50%; }
 
+.card.bg-custom {
+  border-color: #777;
+  color: #777; }
+  .card.bg-custom label {
+    color: #777;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: normal; }
+  .card.bg-custom p {
+    font-size: 30px;
+    color: #777;
+    font-family: "Segoe UI", sans-serif; }
+
 div.card-hover {
   margin-bottom: 1.5em;
   height: 13em; }
@@ -194,4 +206,11 @@ nav.breadcrumb-secondary-wrapper {
     border-right: 1px solid #c7c7c7; }
   .sousa-card .card-body .row > .col-6:last-child {
     text-align: left; }
+
+.card-header span {
+  vertical-align: -webkit-baseline-middle; }
+
+.card-header .pull-right div.form-group {
+  margin-bottom: 0;
+  display: inline-block; }
 
