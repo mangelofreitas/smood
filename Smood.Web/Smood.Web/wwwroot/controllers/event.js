@@ -3,6 +3,16 @@
 
     angular.module('smoodWebApp')
         .controller('EventController', function ($scope, $rootScope, $location, $routeParams, apiConnector, Upload) {
+            const emotionChartColor = {
+                Happy: "#30BA24",
+                Angry: "#FD0500",
+                Sad: "#2574BC",
+                Unknown: "#000000",
+                Calm: "#CBF0F3",
+                Disgusted: "#7622B0",
+                Surprised: "#FFECA6",
+                Confused: "#FFE1AD"
+            };
 
             $scope.event = {};
 
@@ -16,6 +26,13 @@
                 $rootScope.showSubmitButtons = withSubmit;
                 $scope.tabIndex = tabNumber;
             };
+
+            var _getDateFormatted = function (nonFormattedDate) {
+                var newDate = new Date(nonFormattedDate);
+
+                return newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+            };
+
 
             $rootScope.showLoadingAnimation();
             apiConnector.get($routeParams.id, "event").then(result => {
@@ -34,7 +51,18 @@
                     ];
                 }
                 $scope.event = result;
-                $rootScope.hideLoadingAnimation(true);
+
+                apiConnector.get($routeParams.id + "/emotions-timeline?startDate=" + _getDateFormatted(result.startDate) + "&endDate=" + _getDateFormatted(result.endDate), "event/").then(dataResult => {
+                    dataResult.series.forEach(e => {
+                        e.borderColor = emotionChartColor[e.label];
+                    });
+                    $scope.emotionsChartData = dataResult;
+                    $rootScope.hideLoadingAnimation(true);
+                }, err => {
+                    $location.path("/error");
+                    $rootScope.hideLoadingAnimation(true);
+                });
+
             }, err => {
                 $location.path("/error");
                 $rootScope.hideLoadingAnimation(true);

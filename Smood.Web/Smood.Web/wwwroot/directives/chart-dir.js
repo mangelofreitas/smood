@@ -19,6 +19,8 @@
 
                     var chartColors = ['#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'];
 
+                    
+
                     if (!$scope.dataset) {
                         $scope.dataset = [
                             {
@@ -32,6 +34,15 @@
                                 borderColor: chartColors[1]
                             }
                         ];
+                    }
+                    else {
+                        var colorIndex = 0;
+                        $scope.dataset.forEach(e => {
+                            if (!e.borderColor) {
+                                e.borderColor = chartColors[colorIndex];
+                                colorIndex++;
+                            }
+                        });
                     }
                     if (!$scope.type) {
                         $scope.type = "line";
