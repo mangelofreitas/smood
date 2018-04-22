@@ -24,7 +24,7 @@
 
         this.get = (id, entityName) => {
             var promise = $http.get(url.concat(entityName, "/", id)).then(response => {
-                return response;
+                return response.data;
             });
             return promise;
         };

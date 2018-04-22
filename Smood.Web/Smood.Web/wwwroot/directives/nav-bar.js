@@ -8,7 +8,9 @@
                 scope: {
                     cancelFunction: '=?',
                     submitFunction: '=?',
-                    getClass: '='
+                    getClass: '=',
+                    breadcamFunction: '=?',
+                    showSubmitButtons: '=?'
                 },
                 templateUrl: 'views-directives/nav-bar.html'
             }
