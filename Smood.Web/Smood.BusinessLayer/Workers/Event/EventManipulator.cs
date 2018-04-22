@@ -63,15 +63,20 @@ namespace Smood.BusinessLayer.Workers.Event
             DatabaseContext.SaveChanges();
         }
 
-        public void SaveEventPhotos(int eventId, string basePath, ICollection<IFormFile> files)
+        public IEnumerable<string> SaveEventPhotos(int eventId, string basePath, IFormFileCollection files)
         {
-            var uploads = Path.Combine(basePath, "content/photo-uploads/event-" + eventId);
+            var basePhotoUrl = "content/photo-uploads/event-" + eventId;
+
+            var newUrlList = new List<string>();
+
+            var uploads = Path.Combine(basePath, basePhotoUrl);
             foreach (var file in files)
             {
                 if (file.Length > 0)
                 {
-                    var finalPath = Path.Combine(uploads, file.FileName + "-" + Guid.NewGuid());
+                    var finalPath = Path.Combine(uploads, Path.GetFileNameWithoutExtension(file.FileName) + "-" + Guid.NewGuid() + Path.GetExtension(file.FileName));
 
+                    Directory.CreateDirectory(uploads);
                     using (var fileStream = new FileStream(finalPath, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
@@ -84,6 +89,8 @@ namespace Smood.BusinessLayer.Workers.Event
                         FilePath = finalPath,
                         FileType = file.ContentType
                     });
+
+                    newUrlList.Add(finalPath.Replace(basePath, "").Replace("\\", "/"));
                 }
             }
 
@@ -91,6 +98,8 @@ namespace Smood.BusinessLayer.Workers.Event
             {
                 DatabaseContext.SaveChanges();
             }
+
+            return newUrlList;
         }
     }
 }

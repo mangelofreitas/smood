@@ -1,11 +1,14 @@
 ﻿using Elasticsearch.Net;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Smood.BusinessLayer.Base.Workers;
 using Smood.BusinessLayer.Workers.Event.DTO;
+using Smood.BusinessLayer.Workers.Event.DTO.ElasticSearch;
 using Smood.DataLayer.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+//using System.Data.Entity;
 
 namespace Smood.BusinessLayer.Workers.Event
 {
@@ -48,10 +51,10 @@ namespace Smood.BusinessLayer.Workers.Event
             });
         }
 
-        public EventUpdateDTO GetById(int eventId, string basePath)
+        public EventUpdateDTO GetById(int eventId, string basePath, string _elasticUrl)
         {
             //var basePath = Directory.GetCurrentDirectory();
-            return DatabaseContext.Events.Where(e => e.EventId == eventId && e.DeleteDate == null).Select(e => new EventUpdateDTO
+            var dto = DatabaseContext.Events.Include("EventPhotos").Where(e => e.EventId == eventId && e.DeleteDate == null).Select(e => new EventUpdateDTO
             {
                 EventId = e.EventId,
                 Name = e.Name,
@@ -63,6 +66,10 @@ namespace Smood.BusinessLayer.Workers.Event
                 EndDate = e.EndDate,
                 StartDate = e.StartDate
             }).FirstOrDefault();
+
+            dto.AvgAge = GetAverageAge(eventId, _elasticUrl);
+
+            return dto;
         }
 
         #endregion
@@ -265,104 +272,36 @@ namespace Smood.BusinessLayer.Workers.Event
             return finalResponse;
         }
 
-        public ChartDTO GetAverageAge(int eventId, string _elasticUrl)
+        public AvgAge GetAverageAge(int eventId, string _elasticUrl)
         {
             var searchResult = DoElasticSearch(_elasticUrl, new
             {
                 size = 0,
+                aggs = new {
+                    avg_ageMin = new {
+                        avg = new {
+                            field = "ageMin"
+                        }
+                    },
+                    avg_ageMax = new
+                    {
+                        avg = new
+                        {
+                            field = "ageMax"
+                        }
+                    }
+                }
             });
 
-            //if ()
-            //{
             var jsonResponse = JObject.Parse(searchResult.Body);
-            var buckets = jsonResponse["aggregations"]["groupByHour"]["buckets"].ToArray();
+            var avg_ageMin = jsonResponse["aggregations"]["avg_ageMin"]["value"];
+            var avg_ageMax = jsonResponse["aggregations"]["avg_ageMax"]["value"];
 
-            var finalResponse = new ChartDTO
+            return new AvgAge
             {
-                Labels = new List<string>(),
-                Series = new List<ChartSeriesDTO>()
+                MinAge = (int)Math.Round(Convert.ToDecimal(avg_ageMin), 0),
+                MaxAge = (int)Math.Round(Convert.ToDecimal(avg_ageMax), 0)
             };
-
-
-            var happyList = new List<decimal?>();
-            var angryList = new List<decimal?>();
-            var sadList = new List<decimal?>();
-            var unknownList = new List<decimal?>();
-            var calmList = new List<decimal?>();
-            var digustedList = new List<decimal?>();
-            var surprisedList = new List<decimal?>();
-            var confusedList = new List<decimal?>();
-
-            foreach (var bucket in buckets)
-            {
-                var label = bucket["key_as_string"].ToString();
-                finalResponse.Labels.Add(label);
-
-                var happyValue = bucket["avgHappy"]["value"].ToString();
-                var angryValue = bucket["avgAngry"]["value"].ToString();
-                var sadValue = bucket["avgSad"]["value"].ToString();
-                var unknownValue = bucket["avgUnknown"]["value"].ToString();
-                var calmValue = bucket["avgCalm"]["value"].ToString();
-                var digustedValue = bucket["avgDigusted"]["value"].ToString();
-                var surprisedValue = bucket["avgSurprised"]["value"].ToString();
-                var confusedValue = bucket["avgConfused"]["value"].ToString();
-
-
-                happyList.Add(happyValue == "" ? (decimal?)null : Convert.ToDecimal(happyValue));
-                angryList.Add(angryValue == "" ? (decimal?)null : Convert.ToDecimal(angryValue));
-                sadList.Add(sadValue == "" ? (decimal?)null : Convert.ToDecimal(sadValue));
-                unknownList.Add(unknownValue == "" ? (decimal?)null : Convert.ToDecimal(unknownValue));
-                calmList.Add(calmValue == "" ? (decimal?)null : Convert.ToDecimal(calmValue));
-                digustedList.Add(digustedValue == "" ? (decimal?)null : Convert.ToDecimal(digustedValue));
-                surprisedList.Add(surprisedValue == "" ? (decimal?)null : Convert.ToDecimal(surprisedValue));
-                confusedList.Add(confusedValue == "" ? (decimal?)null : Convert.ToDecimal(confusedValue));
-            }
-
-
-            finalResponse.Series = new List<ChartSeriesDTO>
-            {
-                new ChartSeriesDTO {
-                    Label = "Happy",
-                    Data = happyList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Angry",
-                    Data = angryList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Sad",
-                    Data = sadList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Unknown",
-                    Data = unknownList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Calm",
-                    Data = calmList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Digusted",
-                    Data = digustedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Surprised",
-                    Data = surprisedList
-                },
-                new ChartSeriesDTO
-                {
-                    Label = "Confused",
-                    Data = confusedList
-                }
-            };
-
-            return finalResponse;
         }
 
         #endregion
