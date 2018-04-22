@@ -5,18 +5,23 @@
         return {
             restrict: 'E',
             scope: {
-                model: '=',
+                model: '=?',
                 id: '@',
                 label: '@',
-                multiple: '='
+                multiple: '=?',
+                uploadFunction: '=?'
             },
             controller: function($scope) {
                 $scope.OnSelect = ($file, $files) => { 
                     if($scope.multiple){
-                        $scope.model = $files
+                        $scope.model = $files;    
                     } else {
-                        $scope.model = $file;
+                        $scope.model = $file;                      
                     }
+
+                    if($scope.uploadFunction){
+                        $scope.uploadFunction($scope.model);
+                    }  
                 };       
             },
             templateUrl: function() {

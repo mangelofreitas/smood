@@ -30,16 +30,19 @@
         </form>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 4">
-        <p>the fucking images here </p>
-        <div>
-            <h4>Main image</h4>
-            <img src="event.imageUrl" alt="">
-        </div>
-        <div>
-            <h4>Other images</h4>
-            <div class="img-card" ng-repeat="img in event.photoUrls">
-                <img src="img" alt="">
+        <div class="card text-center" style="width: 12em;">
+            <img class="card-img-top" src="{{baseUrl + event.imageUrl}}">
+            <div class="card-body">
+                <p class="card-text">Main image</p>
             </div>
-        </div>
+        </div>          
+        <input-file id="file" label="Add more images" upload-function="uploadImages" multiple="true"></input-file>
+        <div class="card text-center" style="width: 12em;" ng-repeat="image in event.photoUrls">
+                <img class="card-img-top" src="{{baseUrl + image}}">
+                <div class="card-body">
+                    <p class="card-text">Main image</p>
+                </div>
+            </div>                
+        <div>
     </div>
 </div>

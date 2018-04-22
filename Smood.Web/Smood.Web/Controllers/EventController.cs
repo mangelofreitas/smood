@@ -16,10 +16,17 @@ namespace Smood.Web.Controllers
 {
     public class EventController : BaseController
     {
+        #region Readonly
+
         private readonly EventQuery _query = null;
         private readonly EventManipulator _manipulator = null;
         private readonly SmoodSettings _settings = null;
         private readonly IHostingEnvironment _environment = null;
+        private readonly string _elasticUrl = null;
+
+        #endregion
+
+        #region Constructor
 
         public EventController(IHostingEnvironment environment, IOptions<SmoodSettings> smoodSettings, DatabaseContext context) : base(context)
         {
@@ -27,7 +34,13 @@ namespace Smood.Web.Controllers
             _manipulator = new EventManipulator(context);
             _settings = smoodSettings.Value;
             _environment = environment;
+
+            _elasticUrl = _settings.ElasticSearchLink;
         }
+
+        #endregion
+
+        #region CRUD
 
         [HttpGet]
         public IQueryable<EventListDTO> Get()
@@ -60,17 +73,23 @@ namespace Smood.Web.Controllers
         }
 
         [HttpPost("{eventId}/photo")]
-        public IActionResult PostPhoto(int eventId, ICollection<IFormFile> files)
+        public IActionResult PostPhoto(int eventId, [FromBody]ICollection<IFormFile> files)
         {
             _manipulator.SaveEventPhotos(eventId, _environment.WebRootPath, files);
 
             return Ok();
         }
 
-        [HttpGet("emotions-timeline")]
-        public ChartDTO GetEmotionsTimeline(DateTime startDate, DateTime endDate)
+        #endregion
+
+        #region Elastic Search
+
+        [HttpGet("{eventId}/emotions-timeline")]
+        public ChartDTO GetEmotionsTimeline(int eventId, DateTime startDate, DateTime endDate)
         {
-            return _query.GetEmotionsByRange(startDate, endDate);
+            return _query.GetEmotionsByRange(eventId, startDate, endDate, _elasticUrl);
         }
+
+        #endregion
     }
 }
