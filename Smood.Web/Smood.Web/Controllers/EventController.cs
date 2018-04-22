@@ -51,7 +51,7 @@ namespace Smood.Web.Controllers
         [HttpGet("{eventId}")]
         public EventUpdateDTO GetById(int eventId)
         {
-            return _query.GetById(eventId, basePath: _environment.WebRootPath);
+            return _query.GetById(eventId, _environment.WebRootPath, _elasticUrl);
         }
 
         [HttpPost]
@@ -73,11 +73,9 @@ namespace Smood.Web.Controllers
         }
 
         [HttpPost("{eventId}/photo")]
-        public IActionResult PostPhoto(int eventId, [FromBody]ICollection<IFormFile> files)
+        public IEnumerable<string> PostPhoto(int eventId/*, [FromForm]ICollection<IFormFile> files*/)
         {
-            _manipulator.SaveEventPhotos(eventId, _environment.WebRootPath, files);
-
-            return Ok();
+            return _manipulator.SaveEventPhotos(eventId, _environment.WebRootPath, Request.Form.Files);
         }
 
         #endregion
