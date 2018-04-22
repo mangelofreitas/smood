@@ -10,7 +10,7 @@
             <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 3}" ng-click="changeTab(3, true)"><i class="fa fa-wrench" aria-hidden="true"></i> <span>Configurations</span></button>
         </div>
         <div class="btn-mask">
-            <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 4}" ng-click="tabIndex = 4"><i class="fa fa-picture-o" aria-hidden="true"></i> <span>Images</span></button>
+            <button class="btn btn-secondary" ng-class="{'btn-active': tabIndex == 4}" ng-click="changeTab(4, false)"><i class="fa fa-picture-o" aria-hidden="true"></i> <span>Images</span></button>
         </div>        
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 1">
@@ -22,7 +22,7 @@
     <div class="tab-wrapper" ng-show="tabIndex == 3">
         <form id="form-submit" ng-submit="submit($event);">
             <input-custom id="name" label="Name" model="event.name" required="true"></input-custom>
-            <input-custom id="code" label="Code" model="event.code" required="true"></input-custom>
+            <input-custom id="code" label="Code" model="event.code" required="true" disabled="true"></input-custom>
             <input-custom id="description" label="Description" model="event.description" required="true"></input-custom>
             <input-custom id="start-date" type="date" label="Start Date" model="event.startDate" required="true"></input-custom>
             <input-custom id="end-date" type="date" label="End Date" model="event.endDate" required="true"></input-custom>
@@ -30,19 +30,17 @@
         </form>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 4">
-        <div class="card text-center" style="width: 12em;">
+        <div class="card text-center" style="width: 12em; margin-left: auto; margin-right: auto">
             <img class="card-img-top" src="{{baseUrl + event.imageUrl}}">
             <div class="card-body">
                 <p class="card-text">Main image</p>
             </div>
         </div>          
-        <input-file id="file" label="Add more images" upload-function="uploadImages" multiple="true"></input-file>
-        <div class="card text-center" style="width: 12em;" ng-repeat="image in event.photoUrls">
-                <img class="card-img-top" src="{{baseUrl + image}}">
-                <div class="card-body">
-                    <p class="card-text">Main image</p>
-                </div>
-            </div>                
-        <div>
+        <input-file id="file" label="" upload-function="uploadImages" multiple="true" show-value="false"></input-file>
+        <div class="row">
+            <div class="col-md-3 col-sm-6" ng-repeat="image in event.photoUrls">
+                <img class="card-img-top" src="{{baseUrl + image}}" style="width: 100%; height: 200px;">
+            </div>
+        </div>
     </div>
 </div>

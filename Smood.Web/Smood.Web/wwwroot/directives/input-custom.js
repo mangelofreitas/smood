@@ -7,8 +7,10 @@
             scope: {
                 model: '=',
                 id: '@',
-                label: '@',
-                type: '@'                
+                label: '@?',
+                type: '@?',
+                required: '=?',
+                disabled: '=?'
             },
             controller: function($scope) {
                 if(!$scope.type) {
