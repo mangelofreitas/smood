@@ -1,4 +1,4 @@
-﻿login-menu .navbar-brand *:first-child {
+login-menu .navbar-brand *:first-child {
   font-family: "Segoe UI", sans-serif; }
 
 body {
@@ -168,4 +168,3 @@ nav.breadcrumb-secondary-wrapper {
   background-color: white;
   color: #000;
   border-color: #d6d6d6; }
-
