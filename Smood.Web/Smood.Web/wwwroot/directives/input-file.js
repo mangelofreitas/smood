@@ -9,7 +9,8 @@
                 id: '@',
                 label: '@',
                 multiple: '=?',
-                uploadFunction: '=?'
+                uploadFunction: '=?',
+                showValue: '=?'
             },
             controller: function($scope) {
                 $scope.OnSelect = ($file, $files) => { 

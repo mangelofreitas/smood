@@ -70,9 +70,13 @@
             });
 
             $scope.uploadImages = ($files) => {                
+            $scope.uploadImages = ($files) => {      
+                $rootScope.showLoadingAnimation();          
                 apiConnector.postImage($routeParams.id, "event", $files)
                 .then( result => {
                     console.log(result);
+                    result.data.map( r => $scope.event.photoUrls.push(r));                
+                    $rootScope.hideLoadingAnimation(true);
                 })
                 .catch(err => {
                     $location.path("/error");
@@ -80,8 +84,17 @@
                 });
             };
 
-            var _submit = submitEvent => {
-            };
+            var _submit = submitEvent => {                
+                $rootScope.showLoadingAnimation();     
+                apiConnector.put($routeParams.id, "event", $scope.event)
+                .then( response => {
+                    $rootScope.hideLoadingAnimation(true);          
+                })
+                .catch( err => {
+                    $location.path("/error");
+                    $rootScope.hideLoadingAnimation(true);
+                });
+            };     
 
             $scope.submit = _submit;
 
