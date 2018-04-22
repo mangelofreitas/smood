@@ -60,7 +60,7 @@
         <input-file id="file" label="" upload-function="uploadImages" multiple="true" show-value="false"></input-file>
         <div class="row">
             <div class="col-md-3 col-sm-6" ng-repeat="image in event.photoUrls">
-                <img class="card-img-top" src="{{baseUrl + image}}" style="width: 100%; height: 200px;">
+                <img class="card-img-top" src="{{image}}" style="width: 100%; height: 200px;">
             </div>
         </div>
     </div>
