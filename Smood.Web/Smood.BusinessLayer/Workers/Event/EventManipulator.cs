@@ -21,7 +21,7 @@ namespace Smood.BusinessLayer.Workers.Event
             if (dto.ImageData != null)
             {
                 var uploads = Path.Combine(basePath, "content/photo-uploads");
-                finalPath = Path.Combine(uploads, "main-" + Guid.NewGuid());
+                finalPath = Path.Combine(uploads, "main-" + Guid.NewGuid() + Path.GetExtension(dto.ImageName));
 
                 using (var fileStream = new FileStream(finalPath, FileMode.Create))
                 {
