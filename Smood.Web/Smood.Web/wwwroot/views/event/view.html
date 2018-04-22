@@ -17,7 +17,8 @@
         <chart-dir ng-if="emotionsChartData" dataset="emotionsChartData.series" labels="emotionsChartData.labels" text-title="Emotion chart" id="emotions-chart"></chart-dir>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 2">
-        <chart-dir text-title="Gender chart" id="gender-chart" type="bar"></chart-dir>
+        <!--<chart-pie dataset="[25, 75]" labels="['Female', 'Male']" text-title="Gender chart"></chart-pie>-->
+        <chart-pie dataset="event.genderCount.data" labels="event.genderCount.labels" text-title="Gender chart"></chart-pie>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 3">
         <form id="form-submit" ng-submit="submit($event);">
