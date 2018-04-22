@@ -1,4 +1,4 @@
-login-menu .navbar-brand *:first-child {
+﻿login-menu .navbar-brand *:first-child {
   font-family: "Segoe UI", sans-serif; }
 
 body {
@@ -174,3 +174,11 @@ nav.breadcrumb-secondary-wrapper {
   display: block;
   margin-left: auto;
   margin-right: auto; }
+
+.card-header span {
+  vertical-align: -webkit-baseline-middle; }
+
+.card-header .pull-right div.form-group {
+  margin-bottom: 0;
+  display: inline-block; }
+

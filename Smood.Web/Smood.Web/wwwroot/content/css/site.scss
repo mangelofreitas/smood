@@ -236,3 +236,16 @@ nav.breadcrumb-secondary-wrapper {
     margin-left: auto;
     margin-right: auto;
 }
+
+.card-header {
+    span {
+        vertical-align: -webkit-baseline-middle;
+    }
+
+    .pull-right {
+        div.form-group {
+            margin-bottom: 0;
+            display: inline-block;
+        }
+    }
+}
