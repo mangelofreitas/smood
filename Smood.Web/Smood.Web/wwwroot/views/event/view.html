@@ -24,21 +24,32 @@
         <chart-pie dataset="event.genderCount.data" labels="event.genderCount.labels" text-title="Gender chart"></chart-pie>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 5">
-        <div class="card sousa-card">
-            <div class="card-body">
-                <h5 class="card-title">Ages</h5>
-                <div class="row">
-                    <div class="col-6">
-                        {{event.avgAge.minAge}}
+        <div class="row">
+            <div class="col-md-3 card-dash">
+                <div class="card bg-custom">
+                    <div class="card-header">
+                        <label>Ages</label>
+                        <p>{{event.avgAge.minAge}} ~ {{event.avgAge.maxAge}}</p>
                     </div>
-                    <div class="col-6">
-                        {{event.avgAge.maxAge}}
+                </div>
+            </div>
+            <div class="col-md-3 card-dash">
+                <div class="card bg-custom">
+                    <div class="card-header">
+                        <label># of photos</label>
+                        <p>241</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 card-dash">
+                <div class="card bg-custom">
+                    <div class="card-header">
+                        <label># of faces</label>
+                        <p>426</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div># of photos: 241</div>
-        <div># of faces: {{event.facesCount}}</div>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 3">
         <form id="form-submit" ng-submit="submit($event);">
@@ -59,8 +70,12 @@
         </div>
         <input-file id="file" label="" upload-function="uploadImages" multiple="true" show-value="false"></input-file>
         <div class="row">
-            <div class="col-md-3 col-sm-6" ng-repeat="image in event.photoUrls">
-                <img class="card-img-top" src="{{image}}" style="max-width: 100%;max-height: 200px;width: auto;">
+            <div class="col-md-3 col-sm-6 card-hover card-dash" ng-repeat="image in event.photoUrls">
+                <div class="card bg-dark text-white card-custom">
+                    <div class="card-img" style="background-image:url({{image ? image : 'content/images/no-image.svg'}})">
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
