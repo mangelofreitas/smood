@@ -14,7 +14,7 @@
         </div>        
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 1">
-        <chart-dir ng-if="emotionsChartData" dataset="emotionsChartData.series" labels="emotionsChartData.labels" text-title="Emotion chart" id="emotions-chart"></chart-dir>
+        <chart-dir ng-if="emotionsChartData" filter="emotionsFilter" apply-filter="getEmotionChartDataFromApi" dataset="emotionsChartData.series" labels="emotionsChartData.labels" text-title="Emotion chart" id="emotions-chart"></chart-dir>
     </div>
     <div class="tab-wrapper" ng-show="tabIndex == 2">
         <chart-dir text-title="Gender chart" id="gender-chart" type="bar"></chart-dir>

@@ -2,8 +2,8 @@
     <div class="card-header">
         <span>{{textTitle}}</span>
         <div class="pull-right">
-            <input-custom input-id="datetimepicker1{{id}}" type="dateAndPlaceholder" model="filter.startDate" required="true" placeholder="Start date filter"></input-custom>
-            <input-custom input-id="datetimepicker2{{id}}" type="dateAndPlaceholder" model="filter.endDate" required="true" placeholder="End date filter"></input-custom>
+            <input-custom input-id="datetimepicker1{{id}}" type="dateAndPlaceholder" on-change="onChange" model="filter.startDate" required="true" placeholder="Start date filter"></input-custom>
+            <input-custom input-id="datetimepicker2{{id}}" type="dateAndPlaceholder" on-change="onChange" model="filter.endDate" required="true" placeholder="End date filter"></input-custom>
         </div>
     </div>
     <div class="card-body">

@@ -10,7 +10,9 @@
                     labels: '=?',
                     textTitle: '@',
                     type: '@',
-                    id: '@'
+                    id: '@',
+                    filter: '=?',
+                    applyFilter: '=?'
                 },
                 controller: function ($scope, $timeout) {
                     if (!$scope.labels) {
@@ -19,7 +21,7 @@
 
                     var chartColors = ['#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'];
 
-                    
+                    var chart = null;
 
                     if (!$scope.dataset) {
                         $scope.dataset = [
@@ -48,7 +50,20 @@
                         $scope.type = "line";
                     }
 
-
+                    $scope.onChange = (oldValue, newValue) => {
+                        if ($scope.filter.startDate == oldValue) {
+                            $scope.filter.startDate = newValue;
+                            $scope.applyFilter($scope.filter.startDate, $scope.filter.endDate).then(chartData => {
+                                _createChart(chartData);
+                            });
+                        }
+                        else if ($scope.filter.endDate == oldValue) {
+                            $scope.filter.endDate = newValue;
+                            $scope.applyFilter($scope.filter.startDate, $scope.filter.endDate).then(chartData => {
+                                _createChart(chartData);
+                            });
+                        }
+                    };
 
                     $scope.options = {
                         responsive: true,
@@ -57,16 +72,23 @@
                         showLines: true
                     };
 
-                    
-                    var chart = new Chart($("#" + $scope.id + " canvas"), {
-                        type: $scope.type,
-                        data: {
-                            labels: $scope.labels,
-                            datasets: $scope.dataset,
-                        },
-                        options: $scope.options
-                    });
-                    
+                    var _createChart = chartData => {
+                        if (chart != null) {
+                            chart.destroy();
+                        }
+                        var labels = !chartData ? $scope.labels : chartData.labels;
+                        var dataset = !chartData ? $scope.dataset : chartData.series;
+                        chart = new Chart($("#" + $scope.id + " canvas"), {
+                            type: $scope.type,
+                            data: {
+                                labels: labels,
+                                datasets: dataset,
+                            },
+                            options: $scope.options
+                        });
+                    };
+
+                    _createChart();
                 },
                 templateUrl: 'views-directives/chart-dir.html'
             }

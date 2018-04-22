@@ -31,9 +31,26 @@
             var _getDateFormatted = function (nonFormattedDate) {
                 var newDate = new Date(nonFormattedDate);
 
-                return newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+                return newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate() + " " + newDate.getHours() + ":" + newDate.getMinutes();
             };
 
+            var _getEmotionChartDataFromApi = (startDate, endDate) => {
+                $rootScope.showLoadingAnimation();
+                var promise = apiConnector.get($routeParams.id + "/emotions-timeline?startDate=" + _getDateFormatted(startDate) + "&endDate=" + _getDateFormatted(endDate), "event/").then(dataResult => {
+                    dataResult.series.forEach(e => {
+                        e.borderColor = emotionChartColor[e.label];
+                    });
+                    $scope.emotionsChartData = dataResult;
+                    $rootScope.hideLoadingAnimation(true);
+                    return dataResult;
+                }, err => {
+                    $location.path("/error");
+                    $rootScope.hideLoadingAnimation(true);
+                    });
+                return promise;
+            };
+
+            $scope.getEmotionChartDataFromApi = _getEmotionChartDataFromApi;
 
             $rootScope.showLoadingAnimation();
             apiConnector.get($routeParams.id, "event").then(result => {
@@ -52,18 +69,11 @@
                     ];
                 }
                 $scope.event = result;
-
-                apiConnector.get($routeParams.id + "/emotions-timeline?startDate=" + _getDateFormatted(result.startDate) + "&endDate=" + _getDateFormatted(result.endDate), "event/").then(dataResult => {
-                    dataResult.series.forEach(e => {
-                        e.borderColor = emotionChartColor[e.label];
-                    });
-                    $scope.emotionsChartData = dataResult;
-                    $rootScope.hideLoadingAnimation(true);
-                }, err => {
-                    $location.path("/error");
-                    $rootScope.hideLoadingAnimation(true);
-                });
-
+                $scope.emotionsFilter = {
+                    startDate: result.startDate,
+                    endDate: result.endDate
+                };
+                _getEmotionChartDataFromApi(result.startDate, result.endDate);
             }, err => {
                 $location.path("/error");
                 $rootScope.hideLoadingAnimation(true);
