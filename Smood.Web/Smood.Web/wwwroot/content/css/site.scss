@@ -108,12 +108,31 @@ div.chart-panel-wrapper{
     float: right;
 }
 
-div.card-hover {
-    margin-bottom: 1.5em;    
+.card-custom {
     height: 13em;
-    img.card-img {                
-        height: 13em;
+
+    .card-info-wrapper {
+        padding: 1em;
+        z-index: 1;
+        position: absolute;
     }
+}
+
+div.card-hover {
+    margin-bottom: 1.5em;
+    height: 13em;
+
+    div.card-img {
+        height: 13em;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    div.card-img.card-img-plus {
+        background-size: contain;
+    }
+
     img.card-img.add {
         width: 8em;
         margin-left: auto;
@@ -123,12 +142,13 @@ div.card-hover {
     .card-img-overlay {
         bottom: 75%;
         background-color: rgba(0,0,0,0.4);
-        transition: bottom 0.3s linear;
+        transition: bottom 0.25s linear;
     }
 
-    div.card:hover{
+    div.card:hover {
         cursor: pointer;
-        .card-img-overlay{
+
+        .card-img-overlay {
             bottom: 50%;
         }
     }

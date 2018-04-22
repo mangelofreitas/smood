@@ -1,21 +1,23 @@
 
 <div class="row">
     <div class="col-md-4 col-sm-6 card-hover card-dash" ng-repeat="card in cards">
-        <div ng-click="goToEvent(card)" class="card bg-dark text-white">
-            <img class="card-img" ng-attr-src="{{card.imageUrl}}" alt="Card image">
-            <div class="card-img-overlay">
+        <div ng-click="goToEvent(card)" class="card bg-dark text-white card-custom">
+            <div class="card-img-overlay"></div>
+            <div class="card-info-wrapper">
                 <h5 class="card-title">{{card.name}}</h5>
                 <p class="card-text">{{card.description}}</p>
+            </div>
+            <div class="card-img" style="background-image:url({{card.imageUrl}})">
             </div>
         </div>
     </div>
     <div class="col-md-4 col-sm-6 card-hover card-dash">
-        <div data-toggle="modal" data-target="#create-event" class="card bg-dark text-white">
-            <img class="card-img add" 
-                src="content/images/plus.svg"
-                alt="Card image">
-            <div class="card-img-overlay">
+        <div data-toggle="modal" data-target="#create-event" class="card bg-dark text-white card-custom">
+            <div class="card-img-overlay"></div>
+            <div class="card-info-wrapper">
                 <h5 class="card-title">Add Event</h5>
+            </div>
+            <div class="card-img card-img-plus" style="background-image:url(content/images/plus.svg)">
             </div>
         </div>
     </div>        
