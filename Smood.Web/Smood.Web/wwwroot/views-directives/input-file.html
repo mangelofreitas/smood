@@ -1,0 +1,15 @@
+<div class="form-group">
+    <label for="{{id}}">{{label}}</label>
+    <input class="form-control" id="{{id}}" 
+        placeholder="Drop or select your files"
+        ngf-select="OnSelect($file, $files)" 
+        ngf-drop="OnSelect($file, $files)"
+        ngf-multiple="multiple"
+        ngf-accept="['image/png','image/jpeg']"
+        ng-value="
+            (model.length ? 
+            model.length 
+            : model.name ? 1 : 0 )
+            + ' file(s) selected'"
+        />
+</div>

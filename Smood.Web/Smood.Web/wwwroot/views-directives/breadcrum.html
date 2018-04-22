@@ -1,11 +1,11 @@
-﻿<nav aria-label="breadcrumb">
+﻿<nav aria-label="breadcrumb" class="breadcrumb-secondary-wrapper">
     <ol class="breadcrumb">
         <li ng-repeat="partial in path" class="breadcrumb-item" ng-class="{'active': partial.Active}"><a ng-if="!partial.Active" ng-attr-href="{{partial.Path}}">{{partial.Text}}</a>{{partial.Active ? partial.Text : ''}}</li>
         <!--<li class="breadcrumb-item"><a href="#">Library</a></li>
         <li class="breadcrumb-item active" aria-current="page">Data</li>-->
     </ol>
-    <div class="pull-right">
-        <button type="submit" class="btn btn-default btn-success">Salvar</button>
-        <button type="button" class="btn btn-default btn-secundary" ng-click="cancel();">Cancelar</button>
+    <div ng-if="showSubmitButtons" class="pull-right">
+        <button type="submit" class="btn btn-default btn-success" ng-click="doSubmit($event)">Submit</button>
+        <button type="button" class="btn btn-default btn-secundary" ng-click="doCancel();">Cancel</button>
     </div>
 </nav>
