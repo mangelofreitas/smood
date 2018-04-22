@@ -43,8 +43,11 @@ namespace Smood.BusinessLayer.Workers.Event
             }).FirstOrDefault();
         }
 
-        public ChartDTO GetEmotionsByRange(DateTime startDate, DateTime endDate)
+        public ChartDTO GetEmotionsByRange(int eventId, DateTime startDate, DateTime endDate)
         {
+            // TODO: filter elasticsearch by event code
+            var @event = DatabaseContext.Events.FirstOrDefault(e => e.EventId == eventId && e.DeleteDate == null);
+
             var settings = new ConnectionConfiguration(new Uri("http://206.189.30.185:9200"))
                                 .RequestTimeout(TimeSpan.FromMinutes(2));
 

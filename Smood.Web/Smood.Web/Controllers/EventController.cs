@@ -67,10 +67,10 @@ namespace Smood.Web.Controllers
             return Ok();
         }
 
-        [HttpGet("emotions-timeline")]
-        public ChartDTO GetEmotionsTimeline(DateTime startDate, DateTime endDate)
+        [HttpGet("{eventId}/emotions-timeline")]
+        public ChartDTO GetEmotionsTimeline(int eventId, DateTime startDate, DateTime endDate)
         {
-            return _query.GetEmotionsByRange(startDate, endDate);
+            return _query.GetEmotionsByRange(eventId, startDate, endDate);
         }
     }
 }
