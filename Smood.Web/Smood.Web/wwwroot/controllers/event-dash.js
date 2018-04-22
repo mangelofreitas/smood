@@ -7,6 +7,7 @@
             $scope.cards = [];
             $scope.event = {};
 
+
             $rootScope.showLoadingAnimation();
             apiConnector.getAll('event')
                 .then(events => {
@@ -28,8 +29,10 @@
                     alert("Please select an image!");
                     return;
                 }
-
+                $('#create-event').modal('hide');
                 $rootScope.showLoadingAnimation();
+
+                $scope.event.imageName = $scope.event.file.name;
 
                 var fileDataPromise = Upload.base64DataUrl($scope.event.file);
                 var postPromise = fileDataPromise.then(fileData => {
@@ -37,8 +40,7 @@
                     return apiConnector.post("event", $scope.event);                            
                 });
 
-                postPromise.then(response => {
-                    $('#create-event').modal('hide');
+                postPromise.then(response => {                    
                     $rootScope.hideLoadingAnimation(true);
                     $location.path("event/view/" + response.eventId);
                 })
